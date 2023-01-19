@@ -61,47 +61,31 @@
 
     <script>
     // getting user input for week, format to match dates in CSV file names 
-
     config = import('./config/')
 
-    var fs = require('fs')
-    //import fs from 'fs'
-    function setWeek() {
+      function setWeek() {
       var day = new Date(document.getElementById("startDate").value);
       var one = 1;
-      var resultToday = day.setDate(day.getDate() + one);
-      var resultNew = new Date(resultToday).toLocaleDateString('en-GB')
-      forCSV = resultNew
-      .split('/')
-      .reverse()
-      .join('');
-    console.log(forCSV)
+      var dateCSV = new Date(day.setDate(day.getDate() + one))
+        .toLocaleDateString('en-GB')
+        .split('/')
+        .reverse()
+        .join('');
+    console.log(dateCSV)
 
-    leftCSV = forCSV + '-top-left.csv'
-    rightCSV = forCSV + '-top-right.csv'
-    
-    // if CSV file name matches input date, return CSV data 
-    fs.exists("leftCSV", function (doesExist) {
-      if (doesExist) {
-        var leftRawData = d3.csv("leftCSV",function(data){
-          console.log(data);
-        }); 
+    leftCSV = ''.concat(dateCSV + '-top-left.csv');
+    rightCSV = ''.concat(dateCSV + '-top-right.csv'); 
+    console.log(leftCSV)
+    console.log(rightCSV)
+  
+    var RightcsvData = Array.from(d3.csv(rightCSV).then(function(data) {
+      console.log(data);
+    }));
+    var LeftcsvData = Array.from(d3.csv(leftCSV).then(function(data) {
+      console.log(data);
+    }));
 
-        var rightRawData = d3.csv("rightCSV",function(data){
-          console.log(data);
-        }); 
-      } else {
-        console.log('file not found!');
-      }
-    });
-    } 
-    
-    // creating arrays of data 
-    var rightRawDataArray = Array.from(rightRawData)
-    var leftRawDataArray = Array.from(leftRawData)
-
-
-    const cleanedRightData = rightRawDataArray
+    const cleanedRightData = RightcsvData 
         .filter(r => r.term.length > 2)
         .sort((x, y) => d3.descending(x.count, y.count))
         .slice(0, config.maxTerms)
@@ -115,7 +99,7 @@
       cleanedRightData.map(r => ({ ...r, tfnorm: r.count/total }))
     ]
 
-    const cleanedLeftData = leftRawDataArray
+    const cleanedLeftData = LeftcsvData
         .filter(r => r.term.length > 2)
         .sort((x, y) => d3.descending(x.count, y.count))
         .slice(0, config.maxTerms)
@@ -215,7 +199,7 @@
           .attr("transform", "translate(" + 2*(totalWidth/3) + ",35)")
           .node().appendChild(orderedWordCloud(totalWidth/3, right, '#993333', extent, 'right-top'));
         return svg.node();
-    }
+    }}
     
 
     </script>
