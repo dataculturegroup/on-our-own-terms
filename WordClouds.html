@@ -61,9 +61,9 @@
 
     <script>
     // getting user input for week, format to match dates in CSV file names 
-    config = import('./config/')
-
-      function setWeek() {
+    config = import('./config.js/')
+        
+    function setWeek() {
       var day = new Date(document.getElementById("startDate").value);
       var one = 1;
       var dateCSV = new Date(day.setDate(day.getDate() + one))
@@ -71,7 +71,8 @@
         .split('/')
         .reverse()
         .join('');
-    console.log(dateCSV)
+      console.log(dateCSV)
+    
 
     leftCSV = ''.concat(dateCSV + '-top-left.csv');
     rightCSV = ''.concat(dateCSV + '-top-right.csv'); 
@@ -120,7 +121,8 @@
         const totalWidth = 1200;
 
         // first split the data into left/both/right
-        const totalCount = leftData.map(r => r.count).reduce((a, b) => a + b, 0) + rightData.map(r => r.count).reduce((a, b) => a + b, 0);
+        const totalCount = leftData.map(r => r.count).reduce((a, b) => a + b, 0) 
+                          + rightData.map(r => r.count).reduce((a, b) => a + b, 0);
         
         // figure out venn diagram overlap
         let leftTerms = leftData.map(d => d.term);
