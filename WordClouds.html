@@ -14,9 +14,10 @@
 
     <!-- INCLUDE JS FILES -->     
     <!-- use d3.js for easy DOM manipluation -->
-    <script src="http://d3js.org/d3.v7.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="http://d3js.org/d3.v7.min.js"></script>
     <script src="./apps.js"></script>
- 
+    <script type="text/javascript" src="config.js"></script>
+
 </head>
 
 <body>
@@ -56,13 +57,14 @@
             </div>
          </div>
   
+
       <form class="container-lg" id="form">
         <div class="mb-3">
-          <label for="StartDate">Start date:</label>
-          <input id="inputDate" type="date">
+        <label for="StartDate">Start date:</label>
+        <input id="inputDate" type="date">
         <!-- value="2022-05-05 -->
-          <button id="startDate" type = "button" class="btn btn-primary" onclick="setWeek()">Create Word Cloud!</button>
-          <p id = "day"></p>
+        <button id="startDate" type = "button" class="btn btn-primary" onclick="setWeek()">Create Word Cloud!</button>
+
         </div>
       </form> 
 
@@ -74,7 +76,7 @@
                 </div>
                 <div class="col-6">
                   <h2>Top Terms Unique to Right-Leaning Media</h2>
-                    <div class="p-5 border">Insert viz</div>
+                     <svg class ='p-5 border' style = "width:1200px; height:1200px"></svg>
               </div>
           </div>
       </div>
