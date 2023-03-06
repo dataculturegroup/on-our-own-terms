@@ -14,9 +14,8 @@
 
     <!-- INCLUDE JS FILES -->     
     <!-- use d3.js for easy DOM manipluation -->
-    <script type="text/javascript" src="http://d3js.org/d3.v7.min.js"></script>
-    <script src="./apps.js"></script>
-    <script type="text/javascript" src="config.js"></script>
+    <script type="text/javascript" src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="apps.js"></script>
 
 </head>
 
@@ -63,23 +62,19 @@
         <label for="StartDate">Start date:</label>
         <input id="inputDate" type="date">
         <!-- value="2022-05-05 -->
-        <button id="startDate" type = "button" class="btn btn-primary" onclick="setWeek()">Create Word Cloud!</button>
+        <button id="startDate" type = "button" class="btn btn-primary" onclick="handleDateSelected()">
+          Create Word Cloud!
+        </button>
 
         </div>
       </form> 
 
       <div class="container-xxl mt-5">
         <div class="row">
-          <div class="col-6">
-            <h2>Top Terms Unique to Left-Leaning Media</h2>
-              <div class="p-5 border">Insert viz</div>
-                </div>
-                <div class="col-6">
-                  <h2>Top Terms Unique to Right-Leaning Media</h2>
-                     <svg class ='p-5 border' style = "width:1200px; height:1200px"></svg>
-              </div>
+          <div class="col-12" id="viz-wrapper">
           </div>
       </div>
+      <canvas id="font-helper-canvas" style="display:none"></canvas>
     </main>
     <footer>
     <!-- place footer here -->
