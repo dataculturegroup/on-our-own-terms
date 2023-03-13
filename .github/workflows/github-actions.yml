@@ -1,0 +1,23 @@
+name: Generate Python Script on CRON Schedule
+
+on:
+# push to code refactor branch or 
+  schedule:
+    # every Sunday 
+    - cron: '00 00 * * 0'
+  # manually trigger workflow to check 
+  workflow-dispatch:
+
+jobs: 
+  build: 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: run generate data code 
+        run: python generate_data.py
+
+
+
