@@ -18,34 +18,52 @@
     <script src="apps.js"></script>
 
     <style>
+      .navbar {
+        padding: 10px;
+      }
+      img {
+        padding-left: 20px;
+        width: 8.5%;
+        height: 8.5%;
+      }
       body {
-         font-family: 'PT Serif';
-         margin: 0;
+        font-family: 'PT Serif';
+        margin: 0;
       }
       .header {
-         padding: 30px;
-         text-align: center;
-         color:  #2f2d2b;
+        padding-bottom: 30px;
+        padding-left: 30px;
+        padding-right: 30px;
+        text-align: center;
+        color:  #2f2d2b;
       }
       main {
-         padding-left: 20px;
-         font-size: 20px;
-         color:  #2f2d2b;
+        padding-left: 30px;
+        font-size: 20px;
+        color:  #2f2d2b;
+        display: flex;
+			  flex-wrap: wrap;
+			  align-items: flex-start;
       }
       .button {
         border: none;
-        padding-left: 20px;
         text-align: center;
         background-color: #d24527;
         font-size: 20px;
         color: white;
         padding: 10px;
         margin-top: 10px;
-
       }
       select{
         border-color: #2f2d2b;
         background-color: white; 
+      }
+      .result-week {
+        font-size: 20px;
+        padding-left: 30px;
+      }
+      #viz-wrapper {
+      margin: 0 auto;
       }
 
     </style>
@@ -53,6 +71,9 @@
 
 <body>
   <!--Header content-->
+  <div class="navbar"> </div>
+  <img src="https://global-uploads.webflow.com/6142ed7beedc392d8b0ab2b3/6142ed7beedc3946610ab31f_Component%201.png" alt="MEAG logo">
+  </div>
   <div class="header">
     <h1 style=font-size:80px>On Our Own Terms</h1>
     <h3> Top terms in the US left & right media spheres </h3>
@@ -75,20 +96,20 @@
           </div>
         </div>
         
-      <div class="col-3">
-      <button id="startDate" type="button" class="button" onclick="getSelectedDate()">
+      <div class="row col-3" style="padding-left:30px">
+      <button id="startDate" type="button" class="button" onclick="handleDateSelected(); showResultText();">
         Create Word Cloud!
-    </button>
-    </div>
-  </div>
-
-      <div class="container-xxl mt-5">
-        <div class="row">
-          <div class="col-12" id="viz-wrapper">
-          </div>
       </div>
-      <canvas id="font-helper-canvas" style="display:none"></canvas>
+
+      <div class="row col-12" style="padding-bottom:20px; margin-top:10px"></div>
+      <div id="resultWeek" style='font-size:20px; padding-left:30px'  class="row col-12 margin-top:10px"></div>
     </main>
+
+      <div class="container-xxl" style="padding-bottom:20px";>
+        <div class="row col-12" id="viz-wrapper" margin="0 auto"></div>
+      </div>
+      <canvas id="font-helper-canvas" style="display:none; padding-left:20px" ></canvas>
+
     <footer>
     <!-- place footer here -->
     </footer>
@@ -100,6 +121,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
     integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
     </script>
+    
 </body>
 
 </html>
