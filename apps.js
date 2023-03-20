@@ -9,6 +9,45 @@ const config = ({
   selectedTerm: null
 })
 
+// populate dropdown menu with weeks 
+function populateDates() {
+  var select = document.getElementById("inputDate");
+  var today = new Date();
+  var start = new Date(2022, 7, 1); // August 1, 2022
+  var pastSunday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
+  if (pastSunday < start) {
+    pastSunday = start;
+  }
+  var startDate = new Date(pastSunday); // Start date
+  var options = [];
+  while (startDate >= start) {
+    var optionDate = new Date(startDate);
+    var optionText = optionDate.toDateString() + " - " + new Date(startDate.setDate(startDate.getDate() + 6)).toDateString(); // Set option text to one week range
+    options.push({
+      date: optionDate.toISOString().slice(0, 10),
+      text: optionText
+    });
+    startDate.setDate(startDate.getDate() - 7); // Move to previous Sunday
+  }
+  options.sort(function(a, b) {
+    return b.date.localeCompare(a.date);
+  });
+  for (var i = 0; i < options.length; i++) {
+    var option = document.createElement("option");
+    option.value = options[i].date;
+    option.text = options[i].text;
+    select.appendChild(option);
+  }
+}
+
+function getSelectedDate() {
+  var selectedOption = document.getElementById("inputDate").value;
+  var selectedDate = select.options[select.selectedIndex].value;
+  var formattedDate = selectedDate.split("-").reverse().join(""); // convert date to ddmmyyyy format
+  var selectedDateElement = document.getElementById("startDate");
+  selectedDateElement.innerHTML = formattedDate; // set t
+}
+
 function handleDateSelected() {
   const day = new Date(document.getElementById("inputDate").value);
   const selectedDate = new Date(day.setDate(day.getDate() + 1))
@@ -225,5 +264,5 @@ function orderedWordCloud(theWidth, data, termColor, exent, id){
   }
   
   // we need to return a DOM element for observable to render
-  return svg.node();
+  return svg.node(); 
 }
