@@ -9,25 +9,26 @@ const config = ({
   selectedTerm: null
 })
 
-// populate dropdown menu with weeks 
+// populate dropdown menu with weeks  
 function populateDates() {
   var select = document.getElementById("inputDate");
-  var today = new Date();
-  var start = new Date(2022, 7, 1); // August 1, 2022
-  var pastSunday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
-  if (pastSunday < start) {
-    pastSunday = start;
-  }
-  var startDate = new Date(pastSunday); // Start date
+  // start 6/31/22
+  var start = new Date(2022, 6, 31); 
+  var pastSunday = new Date(start);
+  // first sun after 6/31
+  pastSunday.setDate(pastSunday.getDate() + (7 - pastSunday.getDay())); 
   var options = [];
-  while (startDate >= start) {
-    var optionDate = new Date(startDate);
-    var optionText = optionDate.toDateString() + " - " + new Date(startDate.setDate(startDate.getDate() + 6)).toDateString(); // Set option text to one week range
+
+  while (pastSunday < new Date()) {
+    var optionDate = new Date(pastSunday);
+    var optionText = optionDate.toDateString() + " - " + 
+                    new Date(pastSunday.setDate(pastSunday.getDate() + 6)).toDateString(); 
     options.push({
       date: optionDate.toISOString().slice(0, 10),
       text: optionText
     });
-    startDate.setDate(startDate.getDate() - 7); // Move to previous Sunday
+    // get next sun 
+    pastSunday.setDate(pastSunday.getDate() + 1); 
   }
   options.sort(function(a, b) {
     return b.date.localeCompare(a.date);
@@ -40,25 +41,40 @@ function populateDates() {
   }
 }
 
-function getSelectedDate() {
-  var selectedOption = document.getElementById("inputDate").value;
-  var selectedDate = select.options[select.selectedIndex].value;
-  var formattedDate = selectedDate.split("-").reverse().join(""); // convert date to ddmmyyyy format
-  var selectedDateElement = document.getElementById("startDate");
-  selectedDateElement.innerHTML = formattedDate; // set t
+// showing result text for week 
+function showResultText() {
+  const dropdown = document.getElementById("inputDate");
+  const selectedOption = dropdown.options[dropdown.selectedIndex];
+  const weekRange = selectedOption.text;
+  const weekStart = weekRange.split("-")[0].trim();
+  const weekEnd = weekRange.split("-")[1].trim();
+  const resultWeek = `The results for ${weekStart} to ${weekEnd} are:`;
+  document.getElementById("resultWeek").textContent = resultWeek;
+}
+
+// get the start date for handleDateSelected()
+function getSelectedWeekStartDate() {
+  const selectedDate = document.getElementById("inputDate").value;
+  const startDate = new Date(selectedDate);
+  return startDate
 }
 
 function handleDateSelected() {
-  const day = new Date(document.getElementById("inputDate").value);
+  const day = getSelectedWeekStartDate();
   const selectedDate = new Date(day.setDate(day.getDate() + 1))
     .toLocaleDateString('en-GB')
     .split('/')
     .reverse()
     .join('');
+  const vizWrapper = document.getElementById('viz-wrapper');
+  // remove any existing visualizations
+  while (vizWrapper.firstChild) {
+    vizWrapper.removeChild(vizWrapper.firstChild);
+  }
   fetchData(selectedDate).then(data => {
     const node = renderForWeek(selectedDate, data);
     document.getElementById('viz-wrapper').append(node);  
-  })
+  });
 }
 
 function cleanData(rawData) {
@@ -78,8 +94,10 @@ function fontSizeComputer(term, extent, sizeRange){
 
 async function fetchData(selectedDate) {
   // fetchData (samples for now)
-  const rightCsvData = await d3.csv('rightExample.csv', d3.autoType);
-  const leftCsvData = await d3.csv('leftExample.csv', d3.autoType);
+  const rightCsvData = await d3.csv(selectedDate + '-top-right.csv', d3.autoType);
+  const leftCsvData = await d3.csv(selectedDate + '-top-left.csv', d3.autoType);
+  // const rightCsvData = await d3.csv('rightExample.csv', d3.autoType);
+  // const leftCsvData = await d3.csv('leftExample.csv', d3.autoType);
 
   // clean the data and normalize
   const rightData = cleanData(rightCsvData, config.maxTerms);
