@@ -17,65 +17,90 @@
     <script type="text/javascript" src="https://d3js.org/d3.v7.min.js"></script>
     <script src="apps.js"></script>
 
+    <style>
+      body {
+        font-family: 'PT Serif';
+        margin: 0;
+      }
+      .header {
+        padding-bottom: 30px;
+        padding-left: 30px;
+        padding-right: 30px;
+        text-align: center;
+        color:  #2f2d2b;
+      }
+      main {
+        padding-left: 30px;
+        font-size: 20px;
+        color:  #2f2d2b;
+        display: flex;
+			  flex-wrap: wrap;
+			  align-items: flex-start;
+      }
+      .button {
+        border: none;
+        text-align: center;
+        background-color: #d24527;
+        font-size: 20px;
+        color: white;
+        padding: 10px;
+        margin-top: 10px;
+      }
+      select{
+        border-color: #2f2d2b;
+        background-color: white; 
+      }
+      .result-week {
+        font-size: 20px;
+        padding-left: 30px;
+      }
+      #viz-wrapper {
+      margin: 0 auto;
+      }
+
+    </style>
 </head>
 
 <body>
-    <header>
-    <!-- place navbar here -->
-    <div class="row justify-content-center display-1 mt-4 ms-4 p-1">Media Analysis Project  
-    </div>
+  <!--Header content-->
+  <div class="header">
+    <h1 style=font-size:80px>On Our Own Terms</h1>
+    <h3> Top terms in the US left & right media spheres </h3>
+  </div>
 
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark"> 
-      <div class="container-fluid">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">Link 1</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link 2</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link 3</a>
-          </li>
-        </ul>
-      </div>
-        </nav>
-    </header>
+  <main>
+    <div class="main row col-9">
+      <p >This page allows you to pick a week and displays word cloud visuals of the left and right 
+        wings to illustrate what types of topics may be trending.</p>
 
-    <main>
-
-        <div class="container-lg mt-5">
-            <div class="row">
-            <div class="row align-items-start display-2">Ordered Word Clouds
-                  <div class="col-8">
-                  <p class="lead">This page allows you to pick a week and displays word cloud visuals of the left and right 
-                  wings to illustrate what types of topics may be trending.</p>
-                  <p class="lead">Please enter in a Sunday start date between August 2022 and today:</p>
-                  </div>
-            </div>
-            </div>
-         </div>
-  
-
-      <form class="container-lg" id="form">
-        <div class="mb-3">
-        <label for="StartDate">Start date:</label>
-        <input id="inputDate" type="date">
-        <!-- value="2022-05-05 -->
-        <button id="startDate" type = "button" class="btn btn-primary" onclick="handleDateSelected()">
-          Create Word Cloud!
-        </button>
-
-        </div>
-      </form> 
-
-      <div class="container-xxl mt-5">
-        <div class="row">
-          <div class="col-12" id="viz-wrapper">
+        <div class="parent d-flex align-items-left">
+          <div class="child me-3">Please enter in a Sunday start date between August 2022 and today:</div>
+          <div class="child">
+            <body onload="populateDates()"></body>
+            <form id="form">
+              <select name="select-date" id="inputDate">
+                <option value="" selected>Select a date</option>
+              </select> 
+            </form>
           </div>
+        </div>
+        
+      <div class="row col-3" style="padding-left:30px">
+      <button id="startDate" type="button" class="button" onclick="handleDateSelected(); showResultText();">
+        Create Word Cloud!
       </div>
-      <canvas id="font-helper-canvas" style="display:none"></canvas>
+
+      <div class="row col-12" style="padding-bottom:20px; margin-top:10px"></div>
+      <div id="resultWeek" style='font-size:20px; padding-left:30px'  class="row col-12 margin-top:10px"></div>
     </main>
+
+    
+
+      <div class="container-xxl" style="padding-bottom:20px";>
+        <div class="row col-12" id="viz-wrapper" margin="0 auto"></div>
+      </div>
+      <canvas id="font-helper-canvas" style="display:none; padding-left:20px" ></canvas>
+
     <footer>
     <!-- place footer here -->
     </footer>
