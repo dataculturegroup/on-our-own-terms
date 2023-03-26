@@ -9,17 +9,72 @@ const config = ({
   selectedTerm: null
 })
 
+// populate dropdown menu with weeks  
+function populateDates() {
+  var select = document.getElementById("inputDate");
+  // start 6/31/22
+  var start = new Date(2022, 6, 31); 
+  var pastSunday = new Date(start);
+  // first sun after 6/31
+  pastSunday.setDate(pastSunday.getDate() + (7 - pastSunday.getDay())); 
+  var options = [];
+
+  while (pastSunday < new Date()) {
+    var optionDate = new Date(pastSunday);
+    var optionText = optionDate.toDateString() + " - " + 
+                    new Date(pastSunday.setDate(pastSunday.getDate() + 6)).toDateString(); 
+    options.push({
+      date: optionDate.toISOString().slice(0, 10),
+      text: optionText
+    });
+    // get next sun 
+    pastSunday.setDate(pastSunday.getDate() + 1); 
+  }
+  options.sort(function(a, b) {
+    return b.date.localeCompare(a.date);
+  });
+  for (var i = 0; i < options.length; i++) {
+    var option = document.createElement("option");
+    option.value = options[i].date;
+    option.text = options[i].text;
+    select.appendChild(option);
+  }
+}
+
+// showing result text for week 
+function showResultText() {
+  const dropdown = document.getElementById("inputDate");
+  const selectedOption = dropdown.options[dropdown.selectedIndex];
+  const weekRange = selectedOption.text;
+  const weekStart = weekRange.split("-")[0].trim();
+  const weekEnd = weekRange.split("-")[1].trim();
+  const resultWeek = `The results for ${weekStart} to ${weekEnd} are:`;
+  document.getElementById("resultWeek").textContent = resultWeek;
+}
+
+// get the start date for handleDateSelected()
+function getSelectedWeekStartDate() {
+  const selectedDate = document.getElementById("inputDate").value;
+  const startDate = new Date(selectedDate);
+  return startDate
+}
+
 function handleDateSelected() {
-  const day = new Date(document.getElementById("inputDate").value);
+  const day = getSelectedWeekStartDate();
   const selectedDate = new Date(day.setDate(day.getDate() + 1))
     .toLocaleDateString('en-GB')
     .split('/')
     .reverse()
     .join('');
+  const vizWrapper = document.getElementById('viz-wrapper');
+  // remove any existing visualizations
+  while (vizWrapper.firstChild) {
+    vizWrapper.removeChild(vizWrapper.firstChild);
+  }
   fetchData(selectedDate).then(data => {
     const node = renderForWeek(selectedDate, data);
     document.getElementById('viz-wrapper').append(node);  
-  })
+  });
 }
 
 function cleanData(rawData) {
@@ -39,8 +94,10 @@ function fontSizeComputer(term, extent, sizeRange){
 
 async function fetchData(selectedDate) {
   // fetchData (samples for now)
-  const rightCsvData = await d3.csv('rightExample.csv', d3.autoType);
-  const leftCsvData = await d3.csv('leftExample.csv', d3.autoType);
+  const rightCsvData = await d3.csv(selectedDate + '-top-right.csv', d3.autoType);
+  const leftCsvData = await d3.csv(selectedDate + '-top-left.csv', d3.autoType);
+  // const rightCsvData = await d3.csv('rightExample.csv', d3.autoType);
+  // const leftCsvData = await d3.csv('leftExample.csv', d3.autoType);
 
   // clean the data and normalize
   const rightData = cleanData(rightCsvData, config.maxTerms);
@@ -225,5 +282,5 @@ function orderedWordCloud(theWidth, data, termColor, exent, id){
   }
   
   // we need to return a DOM element for observable to render
-  return svg.node();
+  return svg.node(); 
 }
