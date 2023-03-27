@@ -39,6 +39,11 @@ function populateDates() {
     option.text = options[i].text;
     select.appendChild(option);
   }
+  // select most recent week in dropdown 
+  select.selectedIndex = 1;
+  // generate for most recent week when page loads
+  showResultText();
+  handleDateSelected();
 }
 
 // showing result text for week 
