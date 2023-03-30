@@ -56,6 +56,16 @@
       }
       #viz-wrapper {
       margin: 0 auto;
+      padding-top: 10px; 
+      display: flex; 
+      flex-direction: row;
+      align-items: center; 
+      }
+      #result-text {
+      width: 50% 
+      }
+      a{
+        color: #2f2d2b;
       }
 
     </style>
@@ -90,28 +100,41 @@
         Create Word Cloud!
       </div>
 
-      <div class="row col-12" style="padding-bottom:20px; margin-top:10px"></div>
-      <div id="resultWeek" style='font-size:20px; padding-left:30px'  class="row col-12 margin-top:10px"></div>
-    </main>
+      <div class="row col-12" style="padding-bottom:20px; "></div>
+      <div id="resultWeek" style='font-size:20px; padding-left:30px;'  class="row col-12 "></div>
 
-    
+  </main>
 
-      <div class="container-xxl" style="padding-bottom:20px";>
-        <div class="row col-12" id="viz-wrapper" margin="0 auto"></div>
+    <div class="container-xxl" style="padding-bottom:20px; max-width:1200px; margin: 0 auto">
+      <div class="row col-12" id="viz-wrapper" margin="0 auto"></div>
+      <div id="link-wrapper">
+        <a href="https://github.com/clairepan1/us-politics-weekly-terms/tree/main/data" target="_blank" rel="noopener noreferrer">Download data</a>
       </div>
-      <canvas id="font-helper-canvas" style="display:none; padding-left:20px" ></canvas>
+    </div>
 
-    <footer>
-    <!-- place footer here -->
-    </footer>
-    <!-- Bootstrap JavaScript Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
-    </script>
+    <canvas id="font-helper-canvas" style="display:none; padding-left:20px" ></canvas>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
-    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
-    </script>
+  <!-- Footer -->
+  <footer class="text-center text-white" style="background-color: #d24527;">
+
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color: d24527;">
+      © 2023 Copyright:
+      <a class="text-white" href="https://github.com/clairepan1/us-politics-weekly-terms" target="_blank" rel="noopener noreferrer">link to GH repo</a>
+    </div>
+    <!-- Copyright -->
+  </footer>
+  <!-- Footer -->
+
+
+  <!-- Bootstrap JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+  integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+  integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
 </body>
 
 </html>
