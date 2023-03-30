@@ -1,4 +1,4 @@
-# requirements of py file 
+# necessary modules/packages/libraries for py file
 altair==4.2.0
 ipython==8.11.0
 matplotlib==3.6.1
