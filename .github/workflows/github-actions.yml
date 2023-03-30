@@ -1,9 +1,9 @@
 name: Generate Python Script on CRON Schedule
 
 on:
-# push to code refactor branch or 
+# push code to main branch or 
   schedule:
-    # every Sunday 
+    # runs every Sunday 
     - cron: '00 00 * * 0'
   # manually trigger workflow to check 
   workflow-dispatch:
@@ -12,12 +12,21 @@ jobs:
   build: 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2  # checkout the repository content to github runner.
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
-      - name: run generate data code 
+          python-version: '3.8' # install the python needed 
+      - name: Install dependencies 
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: execute py script 
         run: python generate_data.py
-
-
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: 'Generated CSV files' # commit message
+          add: 'data/*' # path to your CSV files
+        env:
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
 
