@@ -9,6 +9,9 @@ const config = ({
   selectedTerm: null
 })
 
+
+
+// populate dropdown menu with weeks 
 // populate dropdown menu with weeks  
 function populateDates() {
   var select = document.getElementById("inputDate");
@@ -33,18 +36,25 @@ function populateDates() {
   options.sort(function(a, b) {
     return b.date.localeCompare(a.date);
   });
-  for (var i = 0; i < options.length; i++) {
+  for (var i = 1; i < options.length; i++) {
     var option = document.createElement("option");
     option.value = options[i].date;
     option.text = options[i].text;
     select.appendChild(option);
   }
-  // select most recent week in dropdown 
+  // select the last option (which is the most recent week)
   select.selectedIndex = 1;
-  // generate for most recent week when page loads
+
+  // show the result text for the selected week
   showResultText();
+
+  // generate the visualization for the selected week
   handleDateSelected();
 }
+
+
+
+
 
 // showing result text for week 
 function showResultText() {
