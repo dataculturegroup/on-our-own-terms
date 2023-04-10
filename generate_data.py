@@ -129,11 +129,6 @@ with open('top-terms.csv','w') as csvfile:
     for key, value in word_freq.items():
         writer.writerow([key,value]) 
 
-# set up Github API client
-token = os.environ.get('GITHUB_TOKEN')
-g = Github(token)
-repo = g.get_repo('dataculturegroup/us-politics-weekly-terms')
-
 client = SearchApiClient('mediacloud')
 query = "*"
 span_start = dt.date(2022,7,31)
@@ -178,13 +173,4 @@ while more_weeks:
         for row in right_csv_data:
             right_csv.writerow(row)
 
-    # commit and push changes
-    commit_message = "Generated CSV files for {}".format(datestamp)   
-    try:
-        contents = repo.get_contents("", ref="main")
-        repo.create_file(left_file_name, commit_message, ''.join(open(left_file_name, 'r').readlines()), branch="main")
-        repo.create_file(right_file_name, commit_message, ''.join(open(right_file_name, 'r').readlines()), branch="main")
-        print("Pushed CSV files for {}".format(datestamp))
-    except Exception as e:
-        print("Error occurred while pushing CSV files: {}".format(str(e)))   
         
