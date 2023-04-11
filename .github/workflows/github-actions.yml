@@ -27,6 +27,4 @@ jobs:
         with:
           message: 'Generated CSV files' # commit message
           add: 'data/*' # path to CSV files
-        env:
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
 
