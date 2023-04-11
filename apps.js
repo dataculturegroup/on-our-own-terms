@@ -102,9 +102,9 @@ function fontSizeComputer(term, extent, sizeRange){
 
 async function fetchData(selectedDate) {
   // fetchData (samples for now)
-  const rightCsvData = await d3.csv('https://raw.githubusercontent.com/us-politics-weekly-terms/main/data/${selectedDate}-top-right.csv', d3.autoType);
-  const leftCsvData = await d3.csv(''https://raw.githubusercontent.com/us-politics-weekly-terms/main/data/${selectedDate}-top-left.csv', d3.autoType);
-
+  const rightCsvData = await d3.csv(`https://raw.githubusercontent.com/dataculturegroup/us-politics-weekly-terms/main/data/${selectedDate}-top-right.csv`, d3.autoType);
+  const leftCsvData = await d3.csv(`https://raw.githubusercontent.com/dataculturegroup/us-politics-weekly-terms/main/data/${selectedDate}-top-left.csv`, d3.autoType);
+  
   // clean the data and normalize
   const rightData = cleanData(rightCsvData, config.maxTerms);
   const leftData = cleanData(leftCsvData, config.maxTerms);
