@@ -22,6 +22,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: execute py script 
         run: python generate_data.py
+             mv *.csv data/  # move generated CSV files to data directory
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9
         with:
