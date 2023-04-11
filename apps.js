@@ -9,9 +9,6 @@ const config = ({
   selectedTerm: null
 })
 
-
-
-// populate dropdown menu with weeks 
 // populate dropdown menu with weeks  
 function populateDates() {
   var select = document.getElementById("inputDate");
@@ -51,10 +48,6 @@ function populateDates() {
   // generate the visualization for the selected week
   handleDateSelected();
 }
-
-
-
-
 
 // showing result text for week 
 function showResultText() {
