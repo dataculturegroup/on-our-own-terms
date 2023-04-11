@@ -172,5 +172,15 @@ while more_weeks:
         right_csv.writerow(fieldnames)
         for row in right_csv_data:
             right_csv.writerow(row)
+    
+    # update current_start for the next iteration
+    current_start = current_end
 
+    # check if we've reached the end of the span
+    if current_end >= span_end:
+        more_weeks = False
         
+    current_start = current_end + dt.timedelta(days=1)
+
+# print final message
+print("Finished generating CSV files.")
