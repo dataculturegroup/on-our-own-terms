@@ -144,7 +144,7 @@ current_start = span_start
 while more_weeks:
     # fetch data
     print("working on {}".format(current_start))
-    current_end = current_start + dt.timedelta(days=7)
+    current_end = current_start + dt.timedelta(days=6)
     left_terms = client.terms(left_query, current_start, current_end, 'title', 'top')
     left_terms = {term:count for term, count in left_terms.items() if term not in stop_words and len(term) > 3 and not term.isnumeric()}
     right_terms = client.terms(right_query, current_start, current_end, 'title', 'top')
@@ -172,7 +172,7 @@ while more_weeks:
         right_csv.writerow(fieldnames)
         for row in right_csv_data:
             right_csv.writerow(row)
-    
+
     # update current_start for the next iteration
     current_start = current_end
 
