@@ -102,8 +102,8 @@ function fontSizeComputer(term, extent, sizeRange){
 
 async function fetchData(selectedDate) {
   // fetchData (samples for now)
-  const rightCsvData = await d3.csv('/data/' + selectedDate + '-top-right.csv', d3.autoType);
-  const leftCsvData = await d3.csv('/data/' + selectedDate + '-top-left.csv', d3.autoType);
+  const rightCsvData = await d3.csv('us-politics-weekly-terms/data/' + selectedDate + '-top-right.csv', d3.autoType);
+  const leftCsvData = await d3.csv('us-politics-weekly-terms/data/' + selectedDate + '-top-left.csv', d3.autoType);
   // const rightCsvData = await d3.csv('rightExample.csv', d3.autoType);
   // const leftCsvData = await d3.csv('leftExample.csv', d3.autoType);
 
