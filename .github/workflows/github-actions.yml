@@ -12,11 +12,12 @@ jobs:
   build: 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2  # checkout the repository content to github runner.
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v2.5.2
         with:
-          python-version: '3.8' # install the python needed 
+          ref: v2.5.2
+      - uses: actions/setup-python@v2.2.2
+        with:
+          python-version: '3.8'
           
       - name: Install dependencies 
         run: |
