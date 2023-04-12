@@ -4,7 +4,7 @@ ipython==8.11.0
 matplotlib==3.6.1
 mediacloud_metadata==0.9.1
 pandas==1.5.3
-requests==2.28.1
+# requests==2.28.1
 spacy==2.3.5
 wayback_news_search==1.0.0
 wordcloud==1.8.2.2
