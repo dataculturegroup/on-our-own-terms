@@ -1,7 +1,7 @@
 name: Generate Python Script on CRON Schedule
 
 on:
-# push code to main branch or 
+# push code to main branch 
   schedule:
     # runs every Sunday 
     - cron: '00 00 * * 0'
@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2  # checkout the repository content to github runner.
       - name: Set up Python
-      - uses: actions/setup-python@v2
+        uses: actions/setup-python@v2
         with:
           python-version: '3.8' # install the python needed 
           
