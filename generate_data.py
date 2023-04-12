@@ -74,6 +74,10 @@ client.count(left_query, start, end)
 right_query = "{} AND domain:({})".format(query, " OR ".join(right_domains))
 client.count(right_query, start, end)
 
+# getting list of stop words 
+with open(os.path.join("data", "en_stop_words.txt")) as f:
+    stop_words = [l.strip() for l in f.readlines() if len(l.strip())>0 and l[0] != "#"]
+
 # counting occurrence of each term in article list for right/left if word is not stop word, not number, longer than 3 letters 
 left_terms = client.terms(left_query, start, end, 'title', 'top')
 left_terms = {term:count for term, count in left_terms.items() if term not in stop_words and len(term) > 3 and not term.isnumeric()}
@@ -92,7 +96,8 @@ with open('right-top-terms.csv','w') as csvfile:
     writer.writerow(fieldnames)
     for key, value in right_terms.items():
         writer.writerow([key,value])
-        
+
+# Qualitative Checks 
 results = []
 for page in client.all_articles(left_query, start, end):
     results += page
@@ -128,6 +133,7 @@ with open('top-terms.csv','w') as csvfile:
     for key, value in word_freq.items():
         writer.writerow([key,value]) 
 
+# Generate Static Data 
 client = SearchApiClient('mediacloud')
 query = "*"
 span_start = dt.date(2022,7,31)
