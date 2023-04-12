@@ -18,11 +18,11 @@ import matplotlib.pyplot as plt
 # https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/OZIVGB
 # quintiles contain name of articles 
 collection_source_files = [
-    "data/2018-quintiles/quintile-far-left.csv",
-    "data/2018-quintiles/quintile-center-left.csv",
-    "data/2018-quintiles/quintile-center.csv",
-    "data/2018-quintiles/quintile-center-right.csv",
-    "data/2018-quintiles/quintile-far-right.csv",
+    "2018-quintiles/quintile-far-left.csv",
+    "2018-quintiles/quintile-center-left.csv",
+    "2018-quintiles/quintile-center.csv",
+    "2018-quintiles/quintile-center-right.csv",
+    "2018-quintiles/quintile-far-right.csv",
 ]
 
 # we are gathering domain names for the articles in each group above 
@@ -55,10 +55,10 @@ for file, domains in domains_by_file.items():
                     duplicated_domains.append(d)
                     
 # give each of the lists a variable 
-far_left_domains = set(domains_by_file['data/2018-quintiles/quintile-far-left.txt'])
-left_domains = set(domains_by_file['data/2018-quintiles/quintile-center-left.txt'] + list(far_left_domains))
-far_right_domains = set(domains_by_file['data/2018-quintiles/quintile-far-right.txt'])
-right_domains = set(domains_by_file['data/2018-quintiles/quintile-center-right.txt'] + list(far_right_domains))
+far_left_domains = set(domains_by_file['2018-quintiles/quintile-far-left.txt'])
+left_domains = set(domains_by_file['2018-quintiles/quintile-center-left.txt'] + list(far_left_domains))
+far_right_domains = set(domains_by_file['2018-quintiles/quintile-far-right.txt'])
+right_domains = set(domains_by_file['2018-quintiles/quintile-center-right.txt'] + list(far_right_domains))
 
 # get top words for each side 
 client = SearchApiClient('mediacloud')
