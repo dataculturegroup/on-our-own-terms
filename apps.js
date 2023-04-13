@@ -12,23 +12,16 @@ const config = ({
 // populate dropdown menu with weeks  
 function populateDates() {
   var select = document.getElementById("inputDate");
-  // start 6/31/22
-  var start = new Date(2022, 6, 31); 
-  var pastSunday = new Date(start);
-  // first sun after 6/31
-  pastSunday.setDate(pastSunday.getDate() + (7 - pastSunday.getDay())); 
+  var currentWeek = new Date(2022, 7, 1); 
   var options = [];
-
-  while (pastSunday < new Date()) {
-    var optionDate = new Date(pastSunday);
-    var optionText = optionDate.toDateString() + " - " + 
-                    new Date(pastSunday.setDate(pastSunday.getDate() + 6)).toDateString(); 
+while (currentWeek < new Date()) {
+    var optionDate = new Date(currentWeek);
     options.push({
       date: optionDate.toISOString().slice(0, 10),
-      text: optionText
+      text: "Week of " + optionDate.toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric' })
     });
     // get next sun 
-    pastSunday.setDate(pastSunday.getDate() + 1); 
+    currentWeek.setDate(currentWeek.getDate() + 7); 
   }
   options.sort(function(a, b) {
     return b.date.localeCompare(a.date);
@@ -53,10 +46,7 @@ function populateDates() {
 function showResultText() {
   const dropdown = document.getElementById("inputDate");
   const selectedOption = dropdown.options[dropdown.selectedIndex];
-  const weekRange = selectedOption.text;
-  const weekStart = weekRange.split("-")[0].trim();
-  const weekEnd = weekRange.split("-")[1].trim();
-  const resultWeek = `The results for ${weekStart} to ${weekEnd} are:`;
+  const resultWeek = `Top terms in headlines during the ${selectedOption.text}:`;
   document.getElementById("resultWeek").textContent = resultWeek;
 }
 
@@ -102,8 +92,8 @@ function fontSizeComputer(term, extent, sizeRange){
 
 async function fetchData(selectedDate) {
   // fetchData (samples for now)
-  const rightCsvData = await d3.csv(`https://raw.githubusercontent.com/dataculturegroup/us-politics-weekly-terms/main/data/${selectedDate}-top-right.csv`, d3.autoType);
-  const leftCsvData = await d3.csv(`https://raw.githubusercontent.com/dataculturegroup/us-politics-weekly-terms/main/data/${selectedDate}-top-left.csv`, d3.autoType);
+  const rightCsvData = await d3.csv(`./data/${selectedDate}-top-right.csv`, d3.autoType);
+  const leftCsvData = await d3.csv(`./data/${selectedDate}-top-left.csv`, d3.autoType);
   
   // clean the data and normalize
   const rightData = cleanData(rightCsvData, config.maxTerms);
