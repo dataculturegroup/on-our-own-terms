@@ -1,7 +1,7 @@
 
 const config = ({
   width: 1200,
-  height: 250,
+  height: 300,
   maxTerms: 100,
   maxFontSize: 30,
   minFontSize: 12,
