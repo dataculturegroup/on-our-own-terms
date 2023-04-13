@@ -7,6 +7,10 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Source+Sans+Pro&display=swap" rel="stylesheet">
 
     <!-- Bootstrap CSS v5.2.1 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -18,123 +22,142 @@
     <script src="apps.js"></script>
 
     <style>
-      body {
-        font-family: 'PT Serif';
-        margin: 0;
+      :root {
+        --padding-large: 30px;
+        --padding-medium: 15px;
+        --padding-small: 10px;
+        --font-family-header: 'Playfair Display', serif;
+        --font-family-body: 'Source Sans Pro', sans-serif;
       }
-      .header {
-        padding-bottom: 30px;
-        padding-left: 30px;
-        padding-right: 30px;
+      body {
+        font-family: var(--font-family-body);
+        font-size: 1em;
+      }
+      header {
+        padding: var(--padding-large);
         text-align: center;
         color:  #2f2d2b;
       }
-      main {
-        padding-left: 30px;
-        font-size: 20px;
-        color:  #2f2d2b;
-        display: flex;
-			  flex-wrap: wrap;
-			  align-items: flex-start;
+      footer {
+        padding: var(--padding-medium);
+        margin: var(--padding-medium);
+        text-align: center;
       }
-      .button {
+      main {
+      }
+      h1 {
+        font-family: var(--font-family-header);
+        font-size: 4em;
+      }
+      h2 {
+        font-family: var(--font-family-header);
+        font-size: 2em;
+      }
+      h3 {
+        font-family: var(--font-family-header);
+      }
+      button {
         border: none;
         text-align: center;
         background-color: #d24527;
-        font-size: 20px;
+        font-size: 1em;
         color: white;
-        padding: 10px;
-        margin-top: 10px;
+        padding: var(--padding-small) var(--padding-medium);
+        margin-top: var(--padding-medium);
       }
-      select{
-        border-color: #2f2d2b;
-        background-color: white; 
+      select {
+        display: block;
+        margin: 0px auto;
+        margin-top: var(--padding-large);
+        font-size: 1.5em;
+        border: 1px solid black;
       }
-      .result-week {
-        font-size: 20px;
-        padding-left: 30px;
-      }
-      #viz-wrapper {
-      margin: 0 auto;
-      padding-top: 10px; 
-      display: flex; 
-      flex-direction: row;
-      align-items: center; 
-      }
-      #result-text {
-      width: 50% 
-      }
-      a{
+      a {
         color: #2f2d2b;
       }
-
+      #resultWeek {
+        margin: var(--padding-large) 0px;
+        font-size: 1.5em;
+        text-align: center;
+      }
     </style>
 </head>
 
-<body>
-  <!--Header content-->
-  <div class="header">
-    <h1 style=font-size:80px>On Our Own Terms</h1>
-    <h3> Top terms in the US left & right media spheres </h3>
+<body onload="populateDates()">
+  
+  <div class="container">
+  
+    <header>
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+          <h1>On Our Own Terms</h1>
+          <h2>Explore the top words used in American left & right online news sources each week.</h2>
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+          <p>
+            The US online news system has been increasingly defined by polarization, more specifically a phenomenon described
+            as "<a href="https://cyber.harvard.edu/publications/2017/08/mediacloud">asymmetric polarization</a>". Since 2016, 
+            media researchers have found evidence of this over and over again; conservative media sources increasingly are dominated
+            by extreme voices.
+          </p>
+          <p>
+            This site lets you explore the top words used in American left & right online news sources by week. 
+            The data is collected from an evolving new archive of online news being built in collaboration between the
+            <a href="https://www.mediacloud.org/">Media Cloud</a> organization and the 
+            <a href="https://archive.org/about">Internet Archive's</a> <a href="https://web.archive.org/">Wayback Machine</a>.
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+          <form id="form">
+            <select name="select-date" id="inputDate" onchange="handleDateSelected(); showResultText(); return false;">
+              <option value="" selected>Select a date</option>
+            </select> 
+          </form>
+        </div>  
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+          <div id="resultWeek"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">          
+          <div id="viz-wrapper" margin="0 auto"></div>
+        </div>
+      </div>
+      <canvas id="font-helper-canvas" style="display:none; padding-left:20px" ></canvas>
+
+    </main>
+
+    <footer>
+      <p>
+        <a href="https://github.com/dataculturegroup/us-politics-weekly-terms" target="_blank" rel="noopener noreferrer">View our source and data on GitHub</a>
+      </p>  
+      <p>
+        © 2023 Copyright
+      </p>
+    </footer>
+
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+    </script>
+
   </div>
 
-  <main>
-    <div class="main row col-9">
-      <p >This page allows you to pick a week and displays word cloud visuals of the left and right 
-        wings to illustrate what types of topics may be trending.</p>
-
-        <div class="parent d-flex align-items-left">
-          <div class="child me-3">Please enter in a Sunday start date between August 2022 and today:</div>
-          <div class="child">
-            <body onload="populateDates()"></body>
-            <form id="form">
-              <select name="select-date" id="inputDate">
-                <option value="" selected>Select a date</option>
-              </select> 
-            </form>
-          </div>
-        </div>
-        
-      <div class="row col-3" style="padding-left:30px">
-      <button id="startDate" type="button" class="button" onclick="handleDateSelected(); showResultText();">
-        Create Word Cloud!
-      </div>
-
-      <div class="row col-12" style="padding-bottom:20px; "></div>
-      <div id="resultWeek" style='font-size:20px; padding-left:30px;'  class="row col-12 "></div>
-
-  </main>
-
-    <div class="container-xxl" style="padding-bottom:20px; max-width:1200px; margin: 0 auto">
-      <div class="row col-12" id="viz-wrapper" margin="0 auto"></div>
-      <div id="link-wrapper">
-        <a href="https://github.com/clairepan1/us-politics-weekly-terms/tree/main/data" target="_blank" rel="noopener noreferrer">Download data</a>
-      </div>
-    </div>
-
-    <canvas id="font-helper-canvas" style="display:none; padding-left:20px" ></canvas>
-
-  <!-- Footer -->
-  <footer class="text-center text-white" style="background-color: #d24527;">
-
-    <!-- Copyright -->
-    <div class="text-center p-3" style="background-color: d24527;">
-      © 2023 Copyright:
-      <a class="text-white" href="https://github.com/clairepan1/us-politics-weekly-terms" target="_blank" rel="noopener noreferrer">link to GH repo</a>
-    </div>
-    <!-- Copyright -->
-  </footer>
-  <!-- Footer -->
-
-
-  <!-- Bootstrap JavaScript Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-  integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
-  integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
-  </script>
 </body>
 
 </html>

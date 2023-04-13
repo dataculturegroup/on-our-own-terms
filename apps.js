@@ -210,7 +210,7 @@ function listCloudLayout(wordNodes, width, extent, sizeRange) {
   }
   wordNodes.attr('x', (d) => {
     const fs = fontSizeComputer(d, extent, sizeRange);
-    canvasContext2d.font = `bold ${fs}px Lato`; // crazy hack for IE compat, instead of simply this.getComputedTextLength()
+    canvasContext2d.font = `bold ${fs}px 'Source Sans Pro'`; // crazy hack for IE compat, instead of simply this.getComputedTextLength()
     const metrics = canvasContext2d.measureText(d.term);
     const textLength = metrics.width+4; // give it a little horizontal spacing between words
     let lastX = x;
