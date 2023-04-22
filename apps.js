@@ -184,6 +184,33 @@ function renderForWeek(selectedDate, data) {
   svg.append('g') // right
     .attr("transform", "translate(" + 2*(totalWidth/3) + ",35)")
     .node().appendChild(orderedWordCloud(totalWidth/3, right, '#993333', extent, 'right-top'));
+  // add event listeners to each term
+  const terms = svg.selectAll('text');
+  terms.on('click', function(event, d) {
+  // get start and end dates for the selected week
+  // get start and end dates for the selected week
+  console.log(selectedDate);
+  const formattedDate = `${selectedDate.slice(4, 6)}
+                        /${selectedDate.slice(6)}
+                        /${selectedDate.slice(0, 4)}`;
+  console.log(formattedDate);
+  const endDateObj = new Date(new Date(formattedDate).getTime() + 7 * 24 * 60 * 60 * 1000);
+  const endDateStr = endDateObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+  console.log(endDateStr);  
+
+  // open new tab with search for clicked term
+  window.open(`https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}%2520&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(endDateStr)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`)
+  })
+  .on('mouseover', function() {
+    d3.select(this).style('cursor', 'pointer')
+      .style('font-weight', 'normal')
+      .style('font-size', d => (d.fontSize * 1.2) + 'px');
+  })
+  .on('mouseout', function() {
+    d3.select(this).style('cursor', 'default')
+    .style('font-weight', 'bold');
+  }); 
+
   return svg.node();
 }
 
