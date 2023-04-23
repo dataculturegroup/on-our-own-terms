@@ -3,7 +3,7 @@ import datetime as datetime
 import subprocess
 
 # Define the directory where the CSV files are stored
-directory = '/data/'
+directory = 'data/'
 
 # Define the start and end dates of the sequence
 start_date = '20220801'
