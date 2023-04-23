@@ -19,11 +19,11 @@ while current_date <= end_date:
     
     if not os.path.exists(os.path.join(directory, top_left_file)):
         print(f"Missing file: {top_left_file}")
-        subprocess.run(['python', 'generate_csv.py', current_date])
+        subprocess.run(['python', 'generate_csv.py'])
     
     if not os.path.exists(os.path.join(directory, top_right_file)):
         print(f"Missing file: {top_right_file}")
-        subprocess.run(['python', 'generate_csv.py', current_date])
+        subprocess.run(['python', 'generate_csv.py'])
 
 
     # Increment the current date by one week
