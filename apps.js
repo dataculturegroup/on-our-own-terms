@@ -192,7 +192,9 @@ function renderForWeek(selectedDate, data) {
   const endDateObj = new Date(new Date(formattedDate).getTime() + 7 * 24 * 60 * 60 * 1000);
   const endDateStr = endDateObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '-');
   console.log(endDateStr);
-
+  console.log(endDateObj); 
+    
+    
   // open new tab with search for clicked term
   window.open(`https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}%2520&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(endDateStr)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`)
   })
