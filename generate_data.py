@@ -30,8 +30,10 @@ for c in collection_source_files:
     domains = [d for d in domains if len(d) > 0]
     logger.info("  {} - {} sources".format(c, len(domains)))
     with open(os.path.join("data", c[:-4]+".txt"), 'w') as f:
-        for d in set(domains):
+        domains = sorted(set(domains))  # add this line to sort domains
+        for d in domains:
             f.write(d+"\n")
+
             
 # creating a list of domains within each of the 5 quintiles 
 domain_source_files = [f[:-4]+".txt" for f in collection_source_files]
