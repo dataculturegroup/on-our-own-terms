@@ -101,6 +101,7 @@ async function fetchData(selectedDate) {
   return { rightData, leftData };
 }
 
+
 function renderForWeek(selectedDate, data) {
   const rightData = data.rightData;
   const leftData = data.leftData;
@@ -110,6 +111,7 @@ function renderForWeek(selectedDate, data) {
   const sizeRange = { min: config.minFontSize, max: config.maxFontSize };
 
   const totalWidth = config.width;
+
   // first split the data into left/both/right
   const totalCount = leftData.map(r => r.count).reduce((a, b) => a + b, 0) + rightData.map(r => r.count).reduce((a, b) => a + b, 0);
   // figure out venn diagram overlap
@@ -127,70 +129,89 @@ function renderForWeek(selectedDate, data) {
     return {'term': t, 'count': leftItem.count + rightItem.count, tfnorm: (leftItem.count + rightItem.count)/totalCount};
   })
   .sort((a,b) => a.count < b.count);
-  // layout in 3 columns
-  const svg = d3.create('svg')
-    .attr('width', totalWidth)
-    .attr('height', config.height);
-  // titles
-  const leftLabel = svg.append('g') // left
+
+  // create three SVG elements
+  const rightSVG = d3.select("#right-only-terms").append("svg")
+    .attr("width", totalWidth/3)
+    .attr("height", config.height);
+
+const leftSVG = d3.select("#left-only-terms").append("svg")
+    .attr("width", totalWidth/3)
+    .attr("height", config.height);
+
+const sharedSVG = d3.select("#shared-terms").append("svg")
+    .attr("width", totalWidth/3)
+    .attr("height", config.height);
+
+  // labels for 3 viz 
+  const leftLabel = leftSVG.append('g') // left
     .attr("transform", "translate(0,20)")
   leftLabel.append('line')
-      .style("stroke", "#333333")
-      .style("stroke-width", 1)
-      .attr("x1", 0)
-      .attr("y1", 10)
-      .attr("x2", totalWidth/3 - 20)
-      .attr("y2", 10);
+    .style("stroke", "#333333")
+    .style("stroke-width", 1)
+    .attr("x1", 0)
+    .attr("y1", 10)
+    .attr("x2", totalWidth/3 - 20)
+    .attr("y2", 10);
   leftLabel.append("text")
-      .attr("fill", '#333333')
-      .attr("font-weight", 900)
-      .attr("font-size", "16px")
-      .text("Top Terms Unique to Left-Leaning Media");
-  const bothLabel = svg.append('g') // both
-    .attr("transform", "translate("+totalWidth/3+",20)")
+    .attr("fill", '#333333')
+    .attr("font-weight", 900)
+    .attr("font-size", "16px")
+    .text("Top Terms Unique to Left-Leaning Media");
+
+  const bothLabel = sharedSVG.append('g') // both
+  .attr("transform", "translate(0,20)")
   bothLabel.append('line')
-      .style("stroke", "#333333")
-      .style("stroke-width", 1)
-      .attr("x1", 0)
-      .attr("y1", 10)
-      .attr("x2", totalWidth/3 - 20)
-      .attr("y2", 10);
+    .style("stroke", "#333333")
+    .style("stroke-width", 1)
+    .attr("x1", 0)
+    .attr("y1", 10)
+    .attr("x2", totalWidth/3 - 20)
+    .attr("y2", 10);
   bothLabel.append("text")
-      .attr("fill", '#333333')
-      .attr("font-weight", 900)
-      .attr("font-size", "16px")
-      .text("Top Terms in Both Left and Right Leaning Media");
-  const rightLabel = svg.append('g') // left
-    .attr("transform", "translate("+2*(totalWidth/3)+",20)")
+    .attr("fill", '#333333')
+    .attr("font-weight", 900)
+    .attr("font-size", "16px")
+    .text("Top Terms in Both Left and Right Leaning Media");
+
+  const rightLabel = rightSVG.append('g') // right
+    .attr("transform", "translate(0,20)")
   rightLabel.append('line')
-      .style("stroke", "#333333")
-      .style("stroke-width", 1)
-      .attr("x1", 0)
-      .attr("y1", 10)
-      .attr("x2", totalWidth/3 - 20)
-      .attr("y2", 10);
+    .style("stroke", "#333333")
+    .style("stroke-width", 1)
+    .attr("x1", 0)
+    .attr("y1", 10)
+    .attr("x2", totalWidth/3 - 20)
+    .attr("y2", 10);
   rightLabel.append("text")
-      .attr("fill", '#333333')
-      .attr("font-weight", 900)
-      .attr("font-size", "16px")
-      .text("Top Terms Unique to Right-Leaning Media");
+    .attr("fill", '#333333')
+    .attr("font-weight", 900)
+    .attr("font-size", "16px")
+    .text("Top Terms Unique to Right-Leaning Media");
+
   // word cloud
-  svg.append('g') // left
+  leftSVG.append('g') // left
     .attr("transform", "translate(0,35)")
     .node().appendChild(orderedWordCloud(totalWidth/3, left, '#333399', extent, 'left-top'));
-  svg.append("g") // both
-    .attr("transform", "translate(" + totalWidth/3 + ",35)")
+  sharedSVG.append("g") // both
+    .attr("transform", "translate(0,35)")
     .node().appendChild(orderedWordCloud(totalWidth/3, both, '#800080', extent, 'both-top'));
-  svg.append('g') // right
-    .attr("transform", "translate(" + 2*(totalWidth/3) + ",35)")
+  rightSVG.append('g') // right
+    .attr("transform", "translate(0,35)")
     .node().appendChild(orderedWordCloud(totalWidth/3, right, '#993333', extent, 'right-top'));
-  // add event listeners to each term
-  const terms = svg.selectAll('text');
+
+  // combine all three SVG elements into a single selection
+  const allSVGs = d3.selectAll([leftSVG.node(), sharedSVG.node(), rightSVG.node()]);
+
+// select all text elements from the combined selection
+  const terms = allSVGs.selectAll('text');
   terms.on('click', function(event, d) {
   // get start and end dates for the selected week
   const formattedDate = `${selectedDate.slice(4, 6)}-${selectedDate.slice(6)}-${selectedDate.slice(0, 4)}`;
   const endDateObj = new Date(new Date(formattedDate).getTime() + 7 * 24 * 60 * 60 * 1000);
-  const endDateStr = endDateObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '-');   
+  const endDateStr = endDateObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '-');
+  console.log(endDateStr);
+
   // open new tab with search for clicked term
   window.open(`https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}%2520&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(endDateStr)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`)
   })
@@ -204,7 +225,7 @@ function renderForWeek(selectedDate, data) {
     .style('font-weight', 'bold');
   }); 
 
-  return svg.node();
+  return d3.select("#viz-wrapper").node();
 }
 
 function getContext2d() {
@@ -253,8 +274,8 @@ function orderedWordCloud(theWidth, data, termColor, exent, id){
     .attr('width', theWidth)
     .attr('id', id || 'ordered-word-cloud')
     .attr('class', 'word-cloud');
-
-  // start hieght calculations
+  
+  // start height calculations
   let y = config.height;
   let wordNodes;
   const wordListHeight = config.height - (2 * config.padding);
@@ -293,10 +314,11 @@ function orderedWordCloud(theWidth, data, termColor, exent, id){
     // Layout
     y = 0;
     const leftHeight = listCloudLayout(wordNodes, innerWidth, fullExtent, sizeRange);
+
     y = Math.max(y, leftHeight);
     sizeRange.max -= 1;
   }
-  
+
   // we need to return a DOM element for observable to render
   return svg.node(); 
 }
