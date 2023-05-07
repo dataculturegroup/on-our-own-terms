@@ -78,6 +78,27 @@
         font-size: 1.5em;
         text-align: center;
       }
+
+      /* Create three equal columns that floats next to each other */
+      .col-lg-4 {
+        display: inline-flex;
+        width: 33.33%;
+      }
+
+      #left-only-terms,
+      #shared-terms,
+      #right-only-terms {
+        max-width: 100%;
+    }
+
+      /* Responsive layout - when the screen is less than 600px wide, 
+      make the three columns stack on top of each other instead of next to each other */
+      @media screen and (max-width: 600px) {
+        .col-lg-4 {
+          width: 100%;
+        }
+      }
+      
     </style>
 </head>
 
@@ -130,13 +151,23 @@
         <div class="col-lg-6 offset-lg-3">
           <div id="resultWeek"></div>
         </div>
-      </div>
+      </div>  
+
       <div class="row">
-        <div class="col-lg-12">          
-          <div id="viz-wrapper" margin="0 auto"></div>
+        <div class="col-lg-4" id="left-only-terms" >
+        </div>
+        <div class="col-lg-4" id="shared-terms" >
+        </div>
+        <div class="col-lg-4" id="right-only-terms" >
         </div>
       </div>
-      <canvas id="font-helper-canvas" style="display:none; padding-left:20px" ></canvas>
+
+
+          <div id="viz-wrapper" margin="'0 auto">
+          </div>
+        </div>
+      </div>
+      <canvas id="font-helper-canvas" style="display:none; padding-left:20px"></canvas>
 
     </main>
 
