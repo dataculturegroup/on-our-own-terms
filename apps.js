@@ -79,15 +79,22 @@ function handleDateSelected() {
     .reverse()
     .join('');
 
+  
   // Clear the contents of the DIVs
-  const leftTermsOnlyDiv = document.getElementById('left-top');
-  const rightTermsOnlyDiv = document.getElementById('right-top');
+  const leftTermsOnlyDiv = document.getElementById('left-only-terms');
+  const rightTermsOnlyDiv = document.getElementById('right-only-terms');
   const sharedTermsDiv = document.getElementById('shared-terms');
+
+  console.log(leftTermsOnlyDiv); // Check if the element is selected correctly
+  console.log(leftTermsOnlyDiv.innerHTML); // Check the initial contents before clearing
+
   
   if (leftTermsOnlyDiv && rightTermsOnlyDiv && sharedTermsDiv) {
     leftTermsOnlyDiv.innerHTML = '';
     rightTermsOnlyDiv.innerHTML = '';
     sharedTermsDiv.innerHTML = '';
+
+    console.log(leftTermsOnlyDiv.innerHTML); 
   }
 
   // Fetch data and render visualization
