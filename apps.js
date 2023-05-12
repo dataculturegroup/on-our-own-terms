@@ -70,6 +70,7 @@ function getSelectedWeekStartDate() {
   return startDate
 }
 
+
 function handleDateSelected() {
   const day = getSelectedWeekStartDate();
   const selectedDate = new Date(day.setDate(day.getDate() + 1))
@@ -77,16 +78,29 @@ function handleDateSelected() {
     .split('/')
     .reverse()
     .join('');
-  const vizWrapper = document.getElementById('viz-wrapper');
-  // remove any existing visualizations
-  while (vizWrapper.firstChild) {
-    vizWrapper.removeChild(vizWrapper.firstChild);
+
+  // Clear the contents of the DIVs
+  const leftTermsOnlyDiv = document.getElementById('left-top');
+  const rightTermsOnlyDiv = document.getElementById('right-top');
+  const sharedTermsDiv = document.getElementById('shared-terms');
+  
+  if (leftTermsOnlyDiv && rightTermsOnlyDiv && sharedTermsDiv) {
+    leftTermsOnlyDiv.innerHTML = '';
+    rightTermsOnlyDiv.innerHTML = '';
+    sharedTermsDiv.innerHTML = '';
   }
-  fetchData(selectedDate).then(data => {
-    const node = renderForWeek(selectedDate, data);
-    document.getElementById('viz-wrapper').append(node);  
-  });
+
+  // Fetch data and render visualization
+  fetchData(selectedDate)
+    .then((data) => {
+      renderForWeek(selectedDate, data);
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+    });
 }
+
+
 
 function cleanData(rawData) {
   const cleanData = rawData.filter(r => r.term.length > 2) // skip small words
@@ -240,8 +254,6 @@ const sharedSVG = d3.select("#shared-terms").append("svg")
     d3.select(this).style('cursor', 'default')
     .style('font-weight', 'bold');
   }); 
-
-  return d3.select("#viz-wrapper").node();
 }
 
 function getContext2d() {
