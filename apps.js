@@ -212,8 +212,11 @@ const sharedSVG = d3.select("#shared-terms").append("svg")
   const endDateStr = endDateObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '-');
   console.log(endDateStr);
 
+  const url = `https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(endDateStr)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`
+  console.log(url)
+  
   // open new tab with search for clicked term
-  window.open(`  https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(endDateStr)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`)
+  window.open(url)
   })
   .on('mouseover', function() {
     d3.select(this).style('cursor', 'pointer')
