@@ -213,7 +213,7 @@ const sharedSVG = d3.select("#shared-terms").append("svg")
   console.log(endDateStr);
 
   // open new tab with search for clicked term
-  window.open(`https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}%2520&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(endDateStr)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`)
+  window.open(`  https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(endDateStr)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`)
   })
   .on('mouseover', function() {
     d3.select(this).style('cursor', 'pointer')
