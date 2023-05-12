@@ -12,20 +12,33 @@ const config = ({
 // populate dropdown menu with weeks  
 function populateDates() {
   var select = document.getElementById("inputDate");
-  var currentWeek = new Date(2022, 7, 1); 
+  var currentWeek = new Date(2022, 7, 1);
   var options = [];
-while (currentWeek < new Date()) {
-    var optionDate = new Date(currentWeek);
-    options.push({
-      date: optionDate.toISOString().slice(0, 10),
-      text: "Week of " + optionDate.toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric' })
-    });
-    // get next sun 
-    currentWeek.setDate(currentWeek.getDate() + 7); 
+  
+  // getting current date
+  var currentDate = new Date();
+
+  while (currentWeek < currentDate) {
+    // calc the date when the data for the current week will be generated
+    var dataGenerationDate = new Date(currentWeek.getTime() + 5 * 24 * 60 * 60 * 1000);
+    
+    // check if date of data generation has passed
+    if (dataGenerationDate <= currentDate) {
+      var optionDate = new Date(currentWeek);
+      options.push({
+        date: optionDate.toISOString().slice(0, 10),
+        text: "Week of " + optionDate.toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric' })
+      });
+    }
+
+    // next Sunday
+    currentWeek.setDate(currentWeek.getDate() + 7);
   }
+  
   options.sort(function(a, b) {
     return b.date.localeCompare(a.date);
   });
+
   for (var i = 1; i < options.length; i++) {
     var option = document.createElement("option");
     option.value = options[i].date;
