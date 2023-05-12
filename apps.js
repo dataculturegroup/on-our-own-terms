@@ -79,25 +79,18 @@ function handleDateSelected() {
     .reverse()
     .join('');
 
-  
-  // Clear the contents of the DIVs
+  // select DIVs 
   const leftTermsOnlyDiv = document.getElementById('left-only-terms');
   const rightTermsOnlyDiv = document.getElementById('right-only-terms');
   const sharedTermsDiv = document.getElementById('shared-terms');
-
-  console.log(leftTermsOnlyDiv); // Check if the element is selected correctly
-  console.log(leftTermsOnlyDiv.innerHTML); // Check the initial contents before clearing
-
   
+  // clear DIV contents 
   if (leftTermsOnlyDiv && rightTermsOnlyDiv && sharedTermsDiv) {
     leftTermsOnlyDiv.innerHTML = '';
     rightTermsOnlyDiv.innerHTML = '';
     sharedTermsDiv.innerHTML = '';
-
-    console.log(leftTermsOnlyDiv.innerHTML); 
   }
-
-  // Fetch data and render visualization
+  // fetch data, render visualization
   fetchData(selectedDate)
     .then((data) => {
       renderForWeek(selectedDate, data);
@@ -106,8 +99,6 @@ function handleDateSelected() {
       console.error('Error fetching data:', error);
     });
 }
-
-
 
 function cleanData(rawData) {
   const cleanData = rawData.filter(r => r.term.length > 2) // skip small words
