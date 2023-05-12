@@ -9,19 +9,21 @@ const config = ({
   selectedTerm: null
 })
 
-// populate dropdown menu with weeks  
+// populate dropdown menu with weeks
 function populateDates() {
   var select = document.getElementById("inputDate");
   var currentWeek = new Date(2022, 7, 1);
   var options = [];
-  
+
   // getting current date
   var currentDate = new Date();
 
   while (currentWeek < currentDate) {
     // calc the date when the data for the current week will be generated
-    var dataGenerationDate = new Date(currentWeek.getTime() + 5 * 24 * 60 * 60 * 1000);
-    
+    var weekEnd = new Date(currentWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
+    // data generation 5 days after, ie friday 
+    var dataGenerationDate = new Date(weekEnd.getTime() + 5 * 24 * 60 * 60 * 1000);
+
     // check if date of data generation has passed
     if (dataGenerationDate <= currentDate) {
       var optionDate = new Date(currentWeek);
@@ -34,18 +36,19 @@ function populateDates() {
     // next Sunday
     currentWeek.setDate(currentWeek.getDate() + 7);
   }
-  
+
   options.sort(function(a, b) {
     return b.date.localeCompare(a.date);
   });
 
-  for (var i = 1; i < options.length; i++) {
+  for (var i = 0; i < options.length; i++) {
     var option = document.createElement("option");
     option.value = options[i].date;
     option.text = options[i].text;
     select.appendChild(option);
   }
-  // select the last option (which is the most recent week)
+
+  // select the most recent option (which is the last week before the current date)
   select.selectedIndex = 1;
 
   // show the result text for the selected week
