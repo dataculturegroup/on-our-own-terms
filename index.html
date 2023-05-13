@@ -3,11 +3,18 @@
 
 <head>
 
-    <title>Word Clouds Left/Right</title>
+    <title>On Our Own Terms</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
+    <meta property="og:title" content="On Our Terms" />
+    <meta property="og:description" content="Explore the top words used in American left & right online news headlines each week." />
+    <meta property="og:image" content="https://dataculture.northeastern.edu/our-own-terms/img/screenshot.png" />
+    <meta property="og:image:alt" content="screenshot showing top terms for a week used in left and right news sources" />
+    <meta property="og:url" content="https://dataculture.northeastern.edu/our-own-terms" />
+    <meta property="og:type" content="website" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com"> 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Source+Sans+Pro&display=swap" rel="stylesheet">
@@ -21,159 +28,94 @@
     <script type="text/javascript" src="https://d3js.org/d3.v7.min.js"></script>
     <script src="apps.js"></script>
 
-    <style>
-      :root {
-        --padding-large: 30px;
-        --padding-medium: 15px;
-        --padding-small: 10px;
-        --font-family-header: 'Playfair Display', serif;
-        --font-family-body: 'Source Sans Pro', sans-serif;
-      }
-      body {
-        font-family: var(--font-family-body);
-        font-size: 1em;
-      }
-      header {
-        padding: var(--padding-large);
-        text-align: center;
-        color:  #2f2d2b;
-      }
-      footer {
-        padding: var(--padding-medium);
-        margin: var(--padding-medium);
-        text-align: center;
-      }
-      h1 {
-        font-family: var(--font-family-header);
-        font-size: 4em;
-      }
-      h2 {
-        font-family: var(--font-family-header);
-        font-size: 2em;
-      }
-      h3 {
-        font-family: var(--font-family-header);
-      }
-      button {
-        border: none;
-        text-align: center;
-        background-color: #d24527;
-        font-size: 1em;
-        color: white;
-        padding: var(--padding-small) var(--padding-medium);
-        margin-top: var(--padding-medium);
-      }
-      select {
-        display: block;
-        margin: 0px auto;
-        margin-top: var(--padding-large);
-        font-size: 1.5em;
-        border: 1px solid black;
-      }
-      a {
-        color: #2f2d2b;
-      }
-      #resultWeek {
-        margin: var(--padding-large) 0px;
-        font-size: 1.5em;
-        text-align: center;
-      }
+    <link rel="stylesheet" href="./styles.css">
 
-      /* Create three equal columns that floats next to each other */
-      .col-xxl-4 {
-        display: inline-flex;
-        width: 33.33%;
-      }
-
-      #left-only-terms,
-      #shared-terms,
-      #right-only-terms {
-        max-width: 100%;
-    }
-
-      /* Responsive layout - when the screen is less than 600px wide, 
-      make the three columns stack on top of each other instead of next to each other */
-      @media screen and (max-width: 600px) {
-        .col-lg-4 {
-          width: 100%;
-        }
-      }
-      
-    </style>
 </head>
 
 <body onload="populateDates()">
   
-  <div class="container">
-  
     <header>
-      <div class="row">
-        <div class="col-lg-8 offset-lg-2">
-          <h1>On Our Own Terms</h1>
-          <h2>Explore the top words used in American left & right online news headlines each week.</h2>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 offset-lg-2">
+            <h1>On Our Own Terms</h1>
+            <h2>Explore the top words used in American left & right online news headlines each week.</h2>
+          </div>
         </div>
       </div>
     </header>
 
     <main>
 
-      <div class="row">
-        <div class="col-lg-6 offset-lg-3">
-          <p>
-            The US online news system has been increasingly defined by polarization, more specifically a phenomenon described
-            as "<a href="https://cyber.harvard.edu/publications/2017/08/mediacloud">asymmetric polarization</a>". Since 2016, 
-            media researchers have found evidence of this over and over again; conservative media sources increasingly are dominated
-            by extreme voices, while liberal sources are available across the spectrum of politics.
-            <em>In many ways the two set of media are talking about completely differing things</em>.
-          </p>
-          <p>
-            To understand that, this site lets you explore the <em>top words</em> used in article headlines across sets of 
-            American online news sources. These partisan sets are based on sharing patterns of Twitter users, and thus more of an 
-            assessment of what registered voters from each party are sharing and thus an indirect assessment of the political position
-            of the publication itself. This data is collected from an evolving new archive of online news being collaboratively built 
-            by the <a href="https://www.mediacloud.org/">Media Cloud</a> organization and the 
-            <a href="https://archive.org/about">Internet Archive's</a> <a href="https://web.archive.org/">Wayback Machine</a>.
-          </p>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 offset-lg-3">
+            <p>
+              The US political and online news systems have been increasingly defined by their polarization. Since 2016, 
+              <a href="https://cyber.harvard.edu/publications/2017/08/mediacloud">media researchers</a> and 
+              <a href="https://www.usatoday.com/in-depth/news/investigations/2022/09/09/congress-twitter-language-used-democrats-republicans/10146954002/">journalists</a> 
+              have found strong evidence of this. This has led to <em>two sets of media that speak about completely differing things</em>.
+            </p>
+            <p>
+              This site lets you explore media polarization via the <em>top words</em> used in article headlines across two sets of 
+              American online news sources. These partisan sets are based on sharing patterns of Twitter users, and thus more of an 
+              assessment of what registered voters from each party are sharing rather than a direct assessment of the editorial
+              positions of the publication itself. The data is collected from an under-construction new archive of online news being
+              collaboratively built by the <a href="https://www.mediacloud.org/">Media Cloud</a> organization and the 
+              <a href="https://archive.org/about">Internet Archive's</a> <a href="https://web.archive.org/">Wayback Machine</a>.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col-lg-6 offset-lg-3">
-          <form id="form">
-            <select name="select-date" id="inputDate" onchange="handleDateSelected(); showResultText(); return false;">
-              <option value="" selected>Select a date</option>
-            </select> 
-          </form>
+        <div class="row">
+          <div class="col-lg-6 offset-lg-3">
+            <form id="form">
+              <select name="select-date" id="inputDate" onchange="handleDateSelected(); showResultText(); return false;">
+                <option value="" selected>Select a date</option>
+              </select> 
+            </form>
+          </div>  
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6 offset-lg-3">
+            <div id="resultWeek"></div>
+          </div>
         </div>  
-      </div>
 
-      <div class="row">
-        <div class="col-lg-6 offset-lg-3">
-          <div id="resultWeek"></div>
+        <div class="row">
+          <div class="col-xl-4" id="left-only-terms" >
+          </div>
+          <div class="col-xl-4" id="shared-terms" >
+          </div>
+          <div class="col-xl-4" id="right-only-terms" >
+          </div>
         </div>
-      </div>  
-        
-      <div class="row">
-        <div class="col-xxl-4" id="left-only-terms" >
-        </div>
-        <div class="col-xxl-4" id="shared-terms" >
-        </div>
-        <div class="col-xxl-4" id="right-only-terms" >
+
+        <div id="viz-wrapper" margin="'0 auto">
+          </div>
         </div>
       </div>
-        
+      
       <canvas id="font-helper-canvas" style="display:none; padding-left:20px"></canvas>
 
     </main>
 
     <footer>
-      <p>
-        <a href="https://github.com/dataculturegroup/us-politics-weekly-terms" target="_blank" rel="noopener noreferrer">View our source and data on GitHub</a>
-        <br />
-        © 2023 Copyright - Claire Pan and Rahul Bhargava.
-        <br />
-        A project of the Northeasern University <a href="https://dataculture.northeastern.edu">Data Culture Group</a>.
-      </p>
+      <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+          <p>
+            <a href="https://github.com/dataculturegroup/us-politics-weekly-terms" target="_blank" rel="noopener noreferrer">View our source code and data on GitHub</a>
+            <br />
+            © 2023 Copyright - Claire Pan and Rahul Bhargava.
+            <br />
+            A project of the Northeasern University <a href="https://dataculture.northeastern.edu">Data Culture Group</a>.
+            <br />
+            <a href="https://dataculture.northeastern.edu"><img width="80" src="img/dcg-logo.png" alt="Data Culture Group logo" /></a>
+            <a href="https://mediacloud.org"><img width="80" src="img/mediacloud-logo-black.png" alt="Media Cloud logo" /></a>  
+          </p>
+        </div>
+      </div>
     </footer>
 
     <!-- Bootstrap JavaScript Libraries -->

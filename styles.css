@@ -1,0 +1,108 @@
+:root {
+    --padding-large: 30px;
+    --padding-medium: 15px;
+    --padding-small: 10px;
+    --font-family-header: 'Playfair Display', serif;
+    --font-family-body: 'Source Sans Pro', sans-serif;
+    /** https://www.colourlovers.com/palette/482774/dream_magnet **/
+    --color-text: #343838;
+    --color-primary: #005F6B;
+    --color-secondary: #00DFFC;
+    --color-inverse: #fff;
+}
+
+a {
+    color: var(--color-text);
+}
+
+a:hover {
+    color: var(--color-secondary);
+}
+
+a:visited {
+    color: var(--color-text);
+}
+
+body {
+    font-family: var(--font-family-body);
+    font-size: 1em;
+    color: var(--color-text);
+    background: var(--color-background);
+}
+
+header {
+    padding: var(--padding-large);
+    text-align: center;
+    color: var(--color-inverse);
+    background-color: var(--color-primary);
+}
+
+main {
+    margin: var(--padding-large) 0px;
+}
+
+footer {
+    padding: var(--padding-large) 0px;
+    text-align: center;
+    color: var(--color-inverse);
+    background-color: var(--color-primary);
+}
+footer img {
+    margin: var(--padding-small);
+    background-color: #ffffff;
+    border: 1px solid var(--color-text);
+}
+footer a {
+    color: var(--color-inverse);
+}
+footer a:visited {
+    color: var(--color-inverse);
+}
+
+h1 {
+    font-family: var(--font-family-header);
+    font-size: 4em;
+}
+
+h2 {
+    font-family: var(--font-family-header);
+    font-size: 2em;
+    opacity: 0.75;
+}
+
+h3 {
+    font-family: var(--font-family-header);
+}
+
+button {
+    border: none;
+    text-align: center;
+    background-color: #d24527;
+    font-size: 1em;
+    color: white;
+    padding: var(--padding-small) var(--padding-medium);
+    margin-top: var(--padding-medium);
+}
+
+select {
+    display: block;
+    margin: 0px auto;
+    margin-top: var(--padding-large);
+    font-size: 1.5em;
+    border: 1px solid black;
+}
+
+a {
+    color: #2f2d2b;
+}
+
+#resultWeek {
+    margin: var(--padding-large) 0px;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+svg {
+    margin: 0px auto; /** center in parent div **/
+    display: block; /** svg is inline by default **/
+}
