@@ -9,30 +9,46 @@ const config = ({
   selectedTerm: null
 })
 
-// populate dropdown menu with weeks  
+// populate dropdown menu with weeks
 function populateDates() {
   var select = document.getElementById("inputDate");
-  var currentWeek = new Date(2022, 7, 1); 
+  var currentWeek = new Date(2022, 7, 1);
   var options = [];
-while (currentWeek < new Date()) {
-    var optionDate = new Date(currentWeek);
-    options.push({
-      date: optionDate.toISOString().slice(0, 10),
-      text: "Week of " + optionDate.toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric' })
-    });
-    // get next sun 
-    currentWeek.setDate(currentWeek.getDate() + 7); 
+
+  // getting current date
+  var currentDate = new Date();
+
+  while (currentWeek < currentDate) {
+    // calc the date when the data for the current week will be generated
+    var weekEnd = new Date(currentWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
+    // data generation 5 days after, ie friday 
+    var dataGenerationDate = new Date(weekEnd.getTime() + 5 * 24 * 60 * 60 * 1000);
+
+    // check if date of data generation has passed
+    if (dataGenerationDate <= currentDate) {
+      var optionDate = new Date(currentWeek);
+      options.push({
+        date: optionDate.toISOString().slice(0, 10),
+        text: "Week of " + optionDate.toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric' })
+      });
+    }
+
+    // next Sunday
+    currentWeek.setDate(currentWeek.getDate() + 7);
   }
+
   options.sort(function(a, b) {
     return b.date.localeCompare(a.date);
   });
-  for (var i = 1; i < options.length; i++) {
+
+  for (var i = 0; i < options.length; i++) {
     var option = document.createElement("option");
     option.value = options[i].date;
     option.text = options[i].text;
     select.appendChild(option);
   }
-  // select the last option (which is the most recent week)
+
+  // select the most recent option (which is the last week before the current date)
   select.selectedIndex = 1;
 
   // show the result text for the selected week
@@ -57,6 +73,7 @@ function getSelectedWeekStartDate() {
   return startDate
 }
 
+
 function handleDateSelected() {
   const day = getSelectedWeekStartDate();
   const selectedDate = new Date(day.setDate(day.getDate() + 1))
@@ -64,15 +81,26 @@ function handleDateSelected() {
     .split('/')
     .reverse()
     .join('');
-  const vizWrapper = document.getElementById('viz-wrapper');
-  // remove any existing visualizations
-  while (vizWrapper.firstChild) {
-    vizWrapper.removeChild(vizWrapper.firstChild);
+
+  // select DIVs 
+  const leftTermsOnlyDiv = document.getElementById('left-only-terms');
+  const rightTermsOnlyDiv = document.getElementById('right-only-terms');
+  const sharedTermsDiv = document.getElementById('shared-terms');
+  
+  // clear DIV contents 
+  if (leftTermsOnlyDiv && rightTermsOnlyDiv && sharedTermsDiv) {
+    leftTermsOnlyDiv.innerHTML = '';
+    rightTermsOnlyDiv.innerHTML = '';
+    sharedTermsDiv.innerHTML = '';
   }
-  fetchData(selectedDate).then(data => {
-    const node = renderForWeek(selectedDate, data);
-    document.getElementById('viz-wrapper').append(node);  
-  });
+  // fetch data, render visualization
+  fetchData(selectedDate)
+    .then((data) => {
+      renderForWeek(selectedDate, data);
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+    });
 }
 
 function cleanData(rawData) {
@@ -212,8 +240,11 @@ const sharedSVG = d3.select("#shared-terms").append("svg")
   const endDateStr = endDateObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '-');
   console.log(endDateStr);
 
+  const url = `https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(endDateStr)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`
+  console.log(url)
+  
   // open new tab with search for clicked term
-  window.open(`https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}%2520&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(endDateStr)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`)
+  window.open(url)
   })
   .on('mouseover', function() {
     d3.select(this).style('cursor', 'pointer')
@@ -224,8 +255,6 @@ const sharedSVG = d3.select("#shared-terms").append("svg")
     d3.select(this).style('cursor', 'default')
     .style('font-weight', 'bold');
   }); 
-
-  return d3.select("#viz-wrapper").node();
 }
 
 function getContext2d() {
