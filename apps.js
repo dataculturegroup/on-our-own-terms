@@ -1,5 +1,5 @@
 
-const config = ({
+const config = ({ 
   width: 1200,
   height: 300,
   maxTerms: 100,
