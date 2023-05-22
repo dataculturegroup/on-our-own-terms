@@ -236,6 +236,8 @@ const sharedSVG = d3.select("#shared-terms").append("svg")
   terms.on('click', function(event, d) {
   // get start and end dates for the selected week
   const formattedDate = `${selectedDate.slice(4, 6)}-${selectedDate.slice(6)}-${selectedDate.slice(0, 4)}`;
+  const endDateObj = new Date(new Date(formattedDate).getTime() + 7 * 24 * 60 * 60 * 1000);
+  const endDateStr = endDateObj.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
 
   // Parse the formatted date back into a JavaScript Date object
   const parsedDate = new Date(
