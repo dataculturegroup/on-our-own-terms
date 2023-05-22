@@ -21,7 +21,7 @@ function populateDates() {
   while (currentWeek < currentDate) {
     // calc the date when the data for the current week will be generated
     var weekEnd = new Date(currentWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
-    // data generation 5 days after, ie friday 
+    // data generation 5 days after, would be a friday 
     var dataGenerationDate = new Date(weekEnd.getTime() + 5 * 24 * 60 * 60 * 1000);
 
     // check if date of data generation has passed
@@ -73,7 +73,6 @@ function getSelectedWeekStartDate() {
   return startDate
 }
 
-
 function handleDateSelected() {
   const day = getSelectedWeekStartDate();
   const selectedDate = new Date(day.setDate(day.getDate() + 1))
@@ -82,7 +81,7 @@ function handleDateSelected() {
     .reverse()
     .join('');
 
-  // select DIVs 
+  // selecting DIVs 
   const leftTermsOnlyDiv = document.getElementById('left-only-terms');
   const rightTermsOnlyDiv = document.getElementById('right-only-terms');
   const sharedTermsDiv = document.getElementById('shared-terms');
@@ -93,7 +92,8 @@ function handleDateSelected() {
     rightTermsOnlyDiv.innerHTML = '';
     sharedTermsDiv.innerHTML = '';
   }
-  // fetch data, render visualization
+
+  // fetch data, render viz
   fetchData(selectedDate)
     .then((data) => {
       renderForWeek(selectedDate, data);
@@ -102,6 +102,8 @@ function handleDateSelected() {
       console.error('Error fetching data:', error);
     });
 }
+
+
 
 function cleanData(rawData) {
   const cleanData = rawData.filter(r => r.term.length > 2) // skip small words
@@ -120,15 +122,17 @@ function fontSizeComputer(term, extent, sizeRange){
 
 async function fetchData(selectedDate) {
   // fetchData (samples for now)
-  const rightCsvData = await d3.csv(`./data/${selectedDate}-top-right.csv`, d3.autoType);
-  const leftCsvData = await d3.csv(`./data/${selectedDate}-top-left.csv`, d3.autoType);
+  const rightCsvData = await d3.csv('/data/20220731-top-right.csv', d3.autoType);
+  const leftCsvData = await d3.csv('/data/20220731-top-left.csv', d3.autoType);
   
+  console.log(rightCsvData);
+  console.log(leftCsvData); 
+
   // clean the data and normalize
   const rightData = cleanData(rightCsvData, config.maxTerms);
   const leftData = cleanData(leftCsvData, config.maxTerms);
   return { rightData, leftData };
 }
-
 
 function renderForWeek(selectedDate, data) {
   const rightData = data.rightData;
@@ -236,12 +240,28 @@ const sharedSVG = d3.select("#shared-terms").append("svg")
   terms.on('click', function(event, d) {
   // get start and end dates for the selected week
   const formattedDate = `${selectedDate.slice(4, 6)}-${selectedDate.slice(6)}-${selectedDate.slice(0, 4)}`;
-  const endDateObj = new Date(new Date(formattedDate).getTime() + 7 * 24 * 60 * 60 * 1000);
-  const endDateStr = endDateObj.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
-  console.log(endDateObj); 
-  console.log(endDateStr);
 
-  const url = `https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(endDateStr)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`
+  // Parse the formatted date back into a JavaScript Date object
+  const parsedDate = new Date(
+    formattedDate.slice(6), // Year
+    parseInt(formattedDate.slice(0, 2)) - 1, // Month (subtract 1 as month is zero-based)
+    formattedDate.slice(3, 5) // Day
+  );
+
+  // Get one week from the parsed date
+  const oneWeekLater = new Date(parsedDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+  // Format the one week later date as "MM-DD-YYYY"
+  const formattedOneWeekLater = `${
+    (oneWeekLater.getMonth() + 1).toString().padStart(2, '0')
+  }-${oneWeekLater.getDate().toString().padStart(2, '0')
+  }-${oneWeekLater.getFullYear()}`;
+
+  // Output the formatted one week later date
+  console.log(formattedDate)
+  console.log("One Week Later:", formattedOneWeekLater);  
+
+  const url = `https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(formattedOneWeekLater)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`
   console.log(url)
   
   // open new tab with search for clicked term
