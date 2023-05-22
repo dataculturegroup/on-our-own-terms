@@ -238,6 +238,7 @@ const sharedSVG = d3.select("#shared-terms").append("svg")
   const formattedDate = `${selectedDate.slice(4, 6)}-${selectedDate.slice(6)}-${selectedDate.slice(0, 4)}`;
   const endDateObj = new Date(new Date(formattedDate).getTime() + 7 * 24 * 60 * 60 * 1000);
   const endDateStr = endDateObj.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+  console.log(endDateObj); 
   console.log(endDateStr);
 
   const url = `https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(endDateStr)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`
