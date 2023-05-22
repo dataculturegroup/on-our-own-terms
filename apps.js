@@ -21,7 +21,7 @@ function populateDates() {
   while (currentWeek < currentDate) {
     // calc the date when the data for the current week will be generated
     var weekEnd = new Date(currentWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
-    // data generation 5 days after, would be a friday 
+    // data generation 5 days after, ie friday 
     var dataGenerationDate = new Date(weekEnd.getTime() + 5 * 24 * 60 * 60 * 1000);
 
     // check if date of data generation has passed
@@ -73,6 +73,7 @@ function getSelectedWeekStartDate() {
   return startDate
 }
 
+
 function handleDateSelected() {
   const day = getSelectedWeekStartDate();
   const selectedDate = new Date(day.setDate(day.getDate() + 1))
@@ -81,7 +82,7 @@ function handleDateSelected() {
     .reverse()
     .join('');
 
-  // selecting DIVs 
+  // select DIVs 
   const leftTermsOnlyDiv = document.getElementById('left-only-terms');
   const rightTermsOnlyDiv = document.getElementById('right-only-terms');
   const sharedTermsDiv = document.getElementById('shared-terms');
@@ -92,8 +93,7 @@ function handleDateSelected() {
     rightTermsOnlyDiv.innerHTML = '';
     sharedTermsDiv.innerHTML = '';
   }
-
-  // fetch data, render viz
+  // fetch data, render visualization
   fetchData(selectedDate)
     .then((data) => {
       renderForWeek(selectedDate, data);
@@ -102,8 +102,6 @@ function handleDateSelected() {
       console.error('Error fetching data:', error);
     });
 }
-
-
 
 function cleanData(rawData) {
   const cleanData = rawData.filter(r => r.term.length > 2) // skip small words
@@ -122,17 +120,15 @@ function fontSizeComputer(term, extent, sizeRange){
 
 async function fetchData(selectedDate) {
   // fetchData (samples for now)
-  const rightCsvData = await d3.csv('/data/20220731-top-right.csv', d3.autoType);
-  const leftCsvData = await d3.csv('/data/20220731-top-left.csv', d3.autoType);
+  const rightCsvData = await d3.csv(`./data/${selectedDate}-top-right.csv`, d3.autoType);
+  const leftCsvData = await d3.csv(`./data/${selectedDate}-top-left.csv`, d3.autoType);
   
-  console.log(rightCsvData);
-  console.log(leftCsvData); 
-
   // clean the data and normalize
   const rightData = cleanData(rightCsvData, config.maxTerms);
   const leftData = cleanData(leftCsvData, config.maxTerms);
   return { rightData, leftData };
 }
+
 
 function renderForWeek(selectedDate, data) {
   const rightData = data.rightData;
@@ -235,7 +231,7 @@ const sharedSVG = d3.select("#shared-terms").append("svg")
   // combine all three SVG elements into a single selection
   const allSVGs = d3.selectAll([leftSVG.node(), sharedSVG.node(), rightSVG.node()]);
 
-// select all text elements from the combined selection
+  // select all text elements from the combined selection
   const terms = allSVGs.selectAll('text');
   terms.on('click', function(event, d) {
   // get start and end dates for the selected week
@@ -259,9 +255,9 @@ const sharedSVG = d3.select("#shared-terms").append("svg")
 
   // Output the formatted one week later date
   console.log(formattedDate)
-  console.log("One Week Later:", formattedOneWeekLater);  
+  console.log("One Week Later:", formattedOneWeekLater); 
 
-  const url = `https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(formattedOneWeekLater)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`
+  const url = `https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(endDateStr)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`
   console.log(url)
   
   // open new tab with search for clicked term
