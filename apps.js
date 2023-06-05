@@ -1,5 +1,5 @@
 
-const config = ({
+const config = ({ 
   width: 1200,
   height: 300,
   maxTerms: 100,
@@ -231,16 +231,35 @@ const sharedSVG = d3.select("#shared-terms").append("svg")
   // combine all three SVG elements into a single selection
   const allSVGs = d3.selectAll([leftSVG.node(), sharedSVG.node(), rightSVG.node()]);
 
-// select all text elements from the combined selection
+  // select all text elements from the combined selection
   const terms = allSVGs.selectAll('text');
   terms.on('click', function(event, d) {
   // get start and end dates for the selected week
   const formattedDate = `${selectedDate.slice(4, 6)}-${selectedDate.slice(6)}-${selectedDate.slice(0, 4)}`;
   const endDateObj = new Date(new Date(formattedDate).getTime() + 7 * 24 * 60 * 60 * 1000);
-  const endDateStr = endDateObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '-');
-  console.log(endDateStr);
+  const endDateStr = endDateObj.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
 
-  const url = `https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(endDateStr)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`
+  // Parse the formatted date back into a JavaScript Date object
+  const parsedDate = new Date(
+    formattedDate.slice(6), // Year
+    parseInt(formattedDate.slice(0, 2)) - 1, // Month (subtract 1 as month is zero-based)
+    formattedDate.slice(3, 5) // Day
+  );
+
+  // Get one week from the parsed date
+  const oneWeekLater = new Date(parsedDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+  // Format the one week later date as "MM-DD-YYYY"
+  const formattedOneWeekLater = `${
+    (oneWeekLater.getMonth() + 1).toString().padStart(2, '0')
+  }-${oneWeekLater.getDate().toString().padStart(2, '0')
+  }-${oneWeekLater.getFullYear()}`;
+
+  // Output the formatted one week later date
+  console.log(formattedDate)
+  console.log("One Week Later:", formattedOneWeekLater); 
+
+  const url = `https://search.mediacloud.org/search?q=${encodeURIComponent(d.term)}&nq=&start=${encodeURIComponent(formattedDate)}&end=${encodeURIComponent(formattedOneWeekLater)}&p=onlinenews-mediacloud&ss=&cs=34412234%253EUnited%2520States%2520-%2520National&any=any`
   console.log(url)
   
   // open new tab with search for clicked term
