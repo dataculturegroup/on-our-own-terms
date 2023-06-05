@@ -14,7 +14,7 @@ async function loadDomainNames() {
   var leftLeaningDomains = [];
   var rightLeaningDomains = [];
 
-  console.log('Loading domain TXT files...');
+  //console.log('Loading domain TXT files...');
 
   try {
     // read the domain names from the quintile.txt files using d3.js
@@ -33,7 +33,7 @@ async function loadDomainNames() {
       return data.trim().split('\n');
     }).sort();
 
-    console.log('Domain txt files loaded successfully.');
+   //console.log('Domain txt files loaded successfully.');
 
     await queryWaybackAPI(leftLeaningDomains, rightLeaningDomains);
   } catch (error) {
@@ -41,90 +41,69 @@ async function loadDomainNames() {
   }
 }
 
+const WM_API_OVERVIEW_URL = `https://wayback-api.archive.org/colsearch/v1/mediacloud/search/overview`;
+
+function wmAttentionQuery(term, domains, startDateStr, endDateStr) {
+  // encode domains 
+  //?q=${encodeURIComponent(word)}&publication_date:[${firstStartDate}%20TO%20${firstEndDate}]&domain=
+  //var leftDomainQuery = WM_API_OVERVIEW_URL + leftLeaningDomains.map(domain => encodeURIComponent(domain)).join('%20OR%20');
+  //console.log(WM_API_OVERVIEW_URL);
+  //console.log('Left domain query:', leftDomainQuery);
+
+  // send POST request to URL 
+  const dateClause = `publication_date:[${startDateStr} TO ${endDateStr}]`;
+  const domainClause = `domain:(${domains.join(' OR ')})`;
+  const params = {q: `"${term}" AND ${dateClause} AND ${domainClause}`};
+  return fetch(WM_API_OVERVIEW_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(params)
+  }).then(results => results.json());
+  // parse, extract total count 
+  //var data = await response.json();
+  //return data.total || 0;
+}
+
 // query the Wayback API to get word counts
 async function queryWaybackAPI(leftLeaningDomains, rightLeaningDomains) {
-  console.log('Left domains:', leftLeaningDomains);
-  console.log('Right domains:', rightLeaningDomains);
+  //console.log('Left domains:', leftLeaningDomains);
+  //console.log('Right domains:', rightLeaningDomains);
 
-  var startDate = new Date(2022, 6, 31); // start date for the week
-  var endDate = new Date(2022, 7, 6); // end date for the week
+  var startDate = new Date(2023, 4, 15); // start date for the week
+  var endDate = new Date(2023, 4, 22); // end date for the week
 
-  var firstStartDate = startDate.toISOString().slice(0, 10);
-  var firstEndDate = endDate.toISOString().slice(0, 10);
+  var startDateStr = startDate.toISOString().slice(0, 10);
+  var endDateStr = endDate.toISOString().slice(0, 10);
 
-  var leftWordsFile = `/data/${firstStartDate.replace(/-/g, "")}-top-left.csv`;
-  var rightWordsFile = `/data/${firstStartDate.replace(/-/g, "")}-top-right.csv`;
+  var leftWordsFile = `/data/${startDateStr.replace(/-/g, "")}-top-left.csv`;
+  var rightWordsFile = `/data/${endDateStr.replace(/-/g, "")}-top-right.csv`;
 
-  console.log('Left words file:', leftWordsFile);
-  console.log('Right words file:', rightWordsFile);
+  //console.log('Left words file:', leftWordsFile);
+  //console.log('Right words file:', rightWordsFile);
 
   try {
     // read the words from the CSV files using d3.js
     const data = await readCSVData(leftWordsFile, rightWordsFile);
-    var leftWords = data.leftWords;
-    var rightWords = data.rightWords;
+    const leftWords = data.leftWords.slice(0, 1);
+    const rightWords = data.rightWords.slice(0, 1);
 
     console.log('Left words:', leftWords);
     console.log('Right words:', rightWords);
-
-// left domain queries
-var leftPromises = leftWords.map(async function (word) {
-  var apiUrl = `https://wayback-api.archive.org/colsearch/v1/mediacloud/search/overview?q=${encodeURIComponent(word)}&publication_date:[${firstStartDate}%20TO%20${firstEndDate}]&domain=`;
-  // encode domains 
-  var leftDomainQuery = apiUrl + leftLeaningDomains.map(domain => encodeURIComponent(domain)).join('%20OR%20');
-  console.log(apiUrl);
-  console.log('Left domain query:', leftDomainQuery);
-
-  // send POST request to URL 
-  var response = await fetch(leftDomainQuery, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      q: word,
-      publication_date: `[${firstStartDate} TO ${firstEndDate}]`,
-      domain: leftLeaningDomains.join(' OR ')
-    })
-  });
-  // parse, extract total count 
-  var data = await response.json();
-  return data.total || 0;
-});
-
-// right domain queries
-var rightPromises = rightWords.map(async function (word) {
-  var apiUrl = `https://wayback-api.archive.org/colsearch/v1/mediacloud/search/overview?q=${encodeURIComponent(word)}&publication_date:[${firstStartDate}%20TO%20${firstEndDate}]&domain=`;
-  // encode domains 
-  var rightDomainQuery = apiUrl + rightLeaningDomains.map(domain => encodeURIComponent(domain)).join('%20OR%20');
-  console.log('Right domain query:', rightDomainQuery);
-
-  // send POST request to URL 
-  var response = await fetch(rightDomainQuery, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      q: word,
-      publication_date: `[${firstStartDate} TO ${firstEndDate}]`,
-      domain: rightLeaningDomains.join(' OR ')
-    })
-  });
-  // parse, extract total count 
-  var data = await response.json();
-  return data.total || 0;
-});
+    
+    // left domain queries
+    const leftTermFetches = leftWords.map(term => wmAttentionQuery(term, leftLeaningDomains, startDateStr, endDateStr));
+    const rightTermFetches = leftWords.map(term => wmAttentionQuery(term, rightLeaningDomains, startDateStr, endDateStr));
 
     // aggregate left and right counts for each word
-    var [leftCounts, rightCounts] = await Promise.all([Promise.all(leftPromises), Promise.all(rightPromises)]);
+    const leftCounts = await Promise.all(leftTermFetches);
+    const rightCounts = await Promise.all(rightTermFetches);
 
     var weekWordCounts = {};
 
     leftWords.forEach(function (word, index) {
       weekWordCounts[word] = weekWordCounts[word] || [];
       weekWordCounts[word].push({
-        date: firstStartDate,
+        date: startDateStr,
         leftCount: leftCounts[index],
         rightCount: rightCounts[index],
         ratio: leftCounts[index] / rightCounts[index]
@@ -134,7 +113,7 @@ var rightPromises = rightWords.map(async function (word) {
     rightWords.forEach(function (word, index) {
       weekWordCounts[word] = weekWordCounts[word] || [];
       weekWordCounts[word].push({
-        date: firstStartDate,
+        date: startDateStr,
         leftCount: leftCounts[index],
         rightCount: rightCounts[index],
         ratio: leftCounts[index] / rightCounts[index]
