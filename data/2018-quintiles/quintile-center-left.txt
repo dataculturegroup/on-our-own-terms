@@ -3,7 +3,6 @@ abc.net.au
 ahram.org.eg
 al-monitor.com
 alj.am
-aljazeera.com
 aljazeera.net
 allhiphop.com
 allkpop.com
@@ -86,7 +85,6 @@ dangerousminds.net
 dawn.com
 dbknews.com
 deadline.com
-deadspin.com
 deathandtaxesmag.com
 denverite.com
 designtaxi.com
@@ -131,7 +129,6 @@ gazettenet.com
 gazettetimes.com
 geekologie.com
 gizmodo.com
-gizmodo.com.au
 glamour.com
 globalpost.com
 globe.com
@@ -158,7 +155,6 @@ houstonpress.com
 huffingtonpost.ca
 huffingtonpost.co.uk
 huffingtonpost.com
-huffingtonpost.com.au
 huffingtonpost.in
 huffpost.com
 hurriyetdailynews.com
@@ -224,19 +220,16 @@ modernfarmer.com
 montrealgazette.com
 mountainx.com
 mprnews.org
-msnbc.com
 myajc.com
 nakedcapitalism.com
 nashvillescene.com
 nationalgeographic.com
-nationalpost.com
 nativenewsonline.net
 nature.com
 nbclatino.com
 nbcwashington.com
 nerdist.com
 newhavenindependent.org
-news12.com
 news24.com
 newscientist.com
 newsweek.com
@@ -272,7 +265,6 @@ pbn.com
 pbs.org
 people-press.org
 philadelphiaweekly.com
-philly.com
 phillymag.com
 phillyvoice.com
 phoenixnewtimes.com
@@ -286,7 +278,6 @@ politickernj.com
 politifact.com
 polygon.com
 popsci.com
-post-gazette.com
 postandcourier.com
 poynter.org
 pressherald.com
@@ -306,7 +297,6 @@ rappler.com
 recode.net
 refinery29.com
 retractionwatch.com
-reuters.com
 revelist.com
 rferl.org
 riverfronttimes.com
@@ -345,7 +335,6 @@ storycorps.org
 stratechery.com
 streetsblog.net
 streetwise.co
-suntimes.com
 tabletmag.com
 takepart.com
 talkingbiznews.com

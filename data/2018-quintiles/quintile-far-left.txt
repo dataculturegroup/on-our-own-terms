@@ -7,7 +7,6 @@ alternet.org
 americablog.com
 americantheatre.org
 angryasianman.com
-ap.org
 arktimes.com
 baystatebanner.com
 bedfordandbowery.com
@@ -20,8 +19,6 @@ blackyouthproject.com
 blavity.com
 bluenationreview.com
 bossip.com
-boston.com
-bostonglobe.com
 brooklynpaper.com
 brooklynvegan.com
 californiasunday.com
@@ -39,7 +36,6 @@ current.org
 dailykos.com
 dailynewsbin.com
 dcist.com
-deadspin.com
 deadstate.org
 democracynow.org
 democraticunderground.com
@@ -55,7 +51,6 @@ essence.com
 fair.org
 filmmakermagazine.com
 forharriet.com
-gawker.com
 ggwash.org
 globalvoices.org
 globalvoicesonline.org
@@ -65,7 +60,6 @@ greatergreaterwashington.org
 hakaimagazine.com
 harpers.org
 hellobeautiful.com
-huffingtonpost.com
 hyperallergic.com
 indyweek.com
 interviewmagazine.com
@@ -106,9 +100,7 @@ nextcity.org
 niemanlab.org
 niemanreports.org
 nplusonemag.com
-npr.org
 nybooks.com
-nytimes.com
 occupydemocrats.com
 okayplayer.com
 oliverwillis.com
@@ -196,7 +188,6 @@ wamu.org
 washingtonblade.com
 washingtoncitypaper.com
 washingtonjournal.com
-wbur.org
 wgbh.org
 wgbhnews.org
 whyy.org
