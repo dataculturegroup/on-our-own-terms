@@ -185,7 +185,7 @@ const sharedSVG = d3.select("#shared-terms").append("svg")
     .attr("fill", '#333333')
     .attr("font-weight", 900)
     .attr("font-size", "16px")
-    .text("Top Terms Unique to Left-Leaning Media");
+    .text("Unique to Media Mostly Shared by Democrats");
 
   const bothLabel = sharedSVG.append('g') // both
   .attr("transform", "translate(0,20)")
@@ -200,7 +200,7 @@ const sharedSVG = d3.select("#shared-terms").append("svg")
     .attr("fill", '#333333')
     .attr("font-weight", 900)
     .attr("font-size", "16px")
-    .text("Top Terms in Both Left and Right Leaning Media");
+    .text("In Media Shared by Both");
 
   const rightLabel = rightSVG.append('g') // right
     .attr("transform", "translate(0,20)")
@@ -215,7 +215,7 @@ const sharedSVG = d3.select("#shared-terms").append("svg")
     .attr("fill", '#333333')
     .attr("font-weight", 900)
     .attr("font-size", "16px")
-    .text("Top Terms Unique to Right-Leaning Media");
+    .text("Unique to Media Mostly Shared by Republicans");
 
   // word cloud
   leftSVG.append('g') // left
