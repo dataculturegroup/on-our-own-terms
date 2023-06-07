@@ -12,7 +12,6 @@ algemeiner.com
 alligatorarmy.com
 amestrib.com
 anonews.co
-ap.org
 argusleader.com
 armytimes.com
 autonews.com
@@ -33,11 +32,9 @@ cbs12.com
 cbs2iowa.com
 cbs46.com
 cbs8.com
-cbslocal.com
 cfnews13.com
 chainstoreage.com
 charlottestories.com
-cincinnati.com
 citizensvoice.com
 city-journal.org
 cjonline.com
@@ -80,10 +77,8 @@ fox6now.com
 fox8.com
 fox8live.com
 fox9.com
-foxbusiness.com
 foxcarolina.com
 foxla.com
-foxnews.com
 gastongazette.com
 gazette.com
 geekbeat.tv
@@ -178,8 +173,6 @@ navytimes.com
 nbc-2.com
 nbc.com
 nbcdfw.com
-nbcnews.com
-nbcsports.com
 neonnettle.com
 news-journalonline.com
 news-press.com
@@ -189,7 +182,6 @@ newsherald.com
 newsok.com
 newson6.com
 nikkei.com
-nj.com
 nj1015.com
 njherald.com
 nonpareilonline.com
@@ -203,10 +195,8 @@ okcfox.com
 oklahoman.com
 omaha.com
 onwardstate.com
-oregonlive.com
 oudaily.com
 pahomepage.com
-pennlive.com
 pewterreport.com
 pnj.com
 poconorecord.com
@@ -262,7 +252,6 @@ uticaod.com
 wabi.tv
 wafb.com
 washingtonexaminer.com
-washingtontimes.com
 wbko.com
 wbng.com
 wboc.com

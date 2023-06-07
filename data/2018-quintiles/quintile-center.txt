@@ -45,7 +45,6 @@ azcentral.com
 azpbs.org
 azstarnet.com
 baltimoremagazine.com
-baltimoresun.com
 bangordailynews.com
 bendbulletin.com
 bestofneworleans.com
@@ -93,7 +92,6 @@ cleveland.com
 clickondetroit.com
 cnbc.com
 cnet.com
-cnn.com
 cntraveler.com
 cnycentral.com
 collective-evolution.com
@@ -162,7 +160,6 @@ fedscoop.com
 fiercehealthcare.com
 foodandwine.com
 forbes.com
-foreignpolicy.com
 fortune.com
 fosters.com
 fox25boston.com
@@ -186,7 +183,6 @@ gainesville.com
 gamespot.com
 gamesradar.com
 geekwire.com
-gizmodo.com
 gjsentinel.com
 globalnews.ca
 globenewswire.com
@@ -199,7 +195,6 @@ greatfallstribune.com
 greenbaypressgazette.com
 greensboro.com
 greenvilleonline.com
-greenwichtime.com
 guardianlv.com
 hartfordbusiness.com
 hawaiinewsnow.com
@@ -211,7 +206,6 @@ heraldnet.com
 heraldonline.com
 hollywood.com
 hotnewhiphop.com
-huffingtonpost.com
 ibtimes.co.uk
 inc.com
 indystar.com
@@ -263,7 +257,6 @@ lansingstatejournal.com
 lasvegasnow.com
 lasvegassun.com
 lasvegasweekly.com
-latimes.com
 latinpost.com
 latintimes.com
 lawnewz.com
@@ -316,7 +309,6 @@ mypalmbeachpost.com
 mysanantonio.com
 mystatesman.com
 natgeo.com
-nationalgeographic.com
 nationalpost.com
 nationalreport.net
 nbc29.com
@@ -337,7 +329,6 @@ newatlas.com
 news-leader.com
 news-record.com
 news10.com
-news12.com
 news3lv.com
 news4sanantonio.com
 newsday.com
@@ -378,7 +369,6 @@ perezhilton.com
 pewsocialtrends.org
 philly.com
 phillyburbs.com
-phoenixnewtimes.com
 phy.so
 pilotonline.com
 pittsburghmagazine.com
@@ -428,7 +418,6 @@ sciencedaily.com
 scmp.com
 seacoastonline.com
 seattlepi.com
-seattletimes.com
 seeker.com
 self.com
 sentinelandenterprise.com
@@ -504,11 +493,9 @@ thesunchronicle.com
 thetimes-tribune.com
 thetimes.co.uk
 thetimesnews.com
-theverge.com
 theweek.com
 thewrap.com
 thoughtcatalog.com
-time.com
 timescall.com
 timesdispatch.com
 timesfreepress.com
@@ -606,7 +593,6 @@ wtae.com
 wtnh.com
 wtop.com
 wtvr.com
-wusa9.com
 wwlp.com
 wxxinews.org
 wxyz.com
