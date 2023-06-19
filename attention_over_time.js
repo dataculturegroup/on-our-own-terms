@@ -214,7 +214,7 @@ loadDomainNames();
 // d3 viz 
 
 // set dimensions and margins of the graph
-var margin = { top: 30, right: 110, bottom: 80, left: 60 },
+var margin = { top: 30, right: 140, bottom: 80, left: 90 },
   width = 800 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
@@ -236,7 +236,9 @@ d3.json("data/attention/desanti_2023-05-15.json").then(function (data) {
 
     d.data = dates.map(function (date) {
       var ratio = d.leftDaily[date] / d.rightDaily[date];
-      return { date: new Date(date), ratio: ratio };
+      var adjustedDate = new Date(date);
+      adjustedDate.setDate(adjustedDate.getDate() + 1); // Add one day to the date
+      return { date: adjustedDate, ratio: ratio };
     });
     console.log('d.data', d.data); 
   });
@@ -244,66 +246,68 @@ d3.json("data/attention/desanti_2023-05-15.json").then(function (data) {
   var allDates = Array.from(new Set(data.flatMap(d => d.data.map(datum => datum.date))));
 
   // set the ranges, domains for x and y scales
-  var x = d3.scaleTime().range([0, width]).domain([allDates[0], d3.max(allDates)]);
-  var y = d3.scaleLinear().range([height, 0]).domain([-2, 2]);
+  var x = d3.scaleLinear().range([0, width]).domain([-2, 2]);
+  var y = d3.scaleTime().range([height, 0]).domain([d3.min(allDates), d3.max(allDates)]);
 
-// add x axis
-svg.append("g")
-  .attr("class", "x axis")
-  .attr("transform", "translate(0," + height + ")")
   
-// add x-axis tick marks
-svg.append("g")
-  .attr("class", "x-axis")
-  .attr("transform", "translate(0," + height + ")")
-  .call(d3.axisBottom(x).ticks(5).tickFormat(d3.timeFormat("%m-%d-%Y")))
-.selectAll("text")
-  .style("text-anchor", "end")
-  .attr("dx", "-.8em")
-  .attr("dy", ".15em")
-  .attr("transform", "rotate(-65)");
+   // add y axis
+  svg.append("g").call(d3.axisLeft(y).ticks(8).tickFormat(d3.timeFormat("%m-%d-%Y")));
 
-// add x axis label
-svg.append("text")
-  .attr(
-    "transform",
-    "translate(" + width / 2 + " ," + (height + margin.top + 20) + ")"
-  )
-  .style("text-anchor", "middle")
-  .text("Date");
 
-// add y axis
-svg.append("g").call(d3.axisLeft(y));
+   // add y axis label
+  svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0- margin.left )
+    .attr("x", 0 - height / 2)
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Date");
 
-// add y axis label
-svg.append("text")
-  .attr("transform", "rotate(-90)")
-  .attr("y", 0 - margin.left)
-  .attr("x", 0 - height / 2)
-  .attr("dy", "1em")
-  .style("text-anchor", "middle")
-  .text("Ratio (left count/right count)");
+  // add x axis
+  svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
 
-// add y=0 axis
-svg.append("line")
-  .attr("class", "y-axis-zero")
-  .attr("x1", 0)
-  .attr("y1", y(0))
-  .attr("x2", width)
-  .attr("y2", y(0))
-  .style("stroke", "black")
-  .style("stroke", "4");
+  // add x-axis tick marks
+  svg.append("g")
+    .attr("class", "x-axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x).ticks(6).tickFormat(d3.format(".2f")))
+    .selectAll("text")
+    .style("text-anchor", "end")
+    .attr("dx", "-.8em")
+    .attr("dy", ".15em")
+    .attr("transform", "rotate(-65)");
+
+  // add x axis label
+  svg.append("text")
+    .attr("transform", "translate(" + width / 2 + " ," + (height + margin.top + 20) + ")")
+    .style("text-anchor", "middle")
+    .text("Ratio (left count/right count)");
+
+
+
+  // create a vertical line at x=0
+  svg.append("line")
+    .attr("class", "zero-line")
+    .attr("x1", x(0))
+    .attr("y1", 0)
+    .attr("x2", x(0))
+    .attr("y2", height)
+    .style("stroke", "black")
+    .style("stroke", "4");
 
 // define line function
 var line = d3
   .line()
   .x(function (d) {
-    return x(d.date);
+    return x(d.ratio); // fix the x-coordinate to use d.ratio
   })
   .y(function (d) {
-    return y(d.ratio);
+    return y(d.date);
   })
   .curve(d3.curveCatmullRom);
+
 
 // set color gradient
 svg.append("linearGradient")
@@ -349,7 +353,15 @@ svg.append("text")
   .style("font-size", "16px")
   .text("Attention Over Time");
 
-// find the closest x index of the mouse
+// Create a horizontal line that traces the selected data point
+var horizontalLine = svg.append("line")
+  .attr("class", "horizontal-line")
+  .style("stroke", "black")
+  .style("stroke-dasharray", "4")
+  .style("opacity", 0);
+
+
+// find the closest y index of the mouse
 var bisect = d3.bisector(function (d) {
   return d.date;
 }).left;
@@ -382,7 +394,8 @@ var focusText = svg
   .attr("text-anchor", "left")
   .attr("alignment-baseline", "left")
   .attr("dx", 10)
-  .attr("dy", 25);
+  .attr("dy", 0);
+
 
 // transparent rectangle that covers the entire chart area
 svg.append("rect")
@@ -394,32 +407,22 @@ svg.append("rect")
   .on("mousemove", mousemove)
   .on("mouseout", mouseout);
 
-// When mouse moves, show the annotations at the right positions
+// When mouse enters the chart area, show the annotations
 function mouseover() {
   focus.style("opacity", 1);
   focusText.style("opacity", 1);
   focusBox.style("opacity", 1);
 }
 
-// When mouse moves, show the annotations at the right positions
+// When mouse moves within the chart area, update the annotations based on mouse position
 function mousemove(event) {
-  // recover coordinates
-  var mouseX = d3.pointer(event)[0];
-  var x0 = x.invert(mouseX);
+  // Recover mouse coordinates
+  var mouseY = d3.pointer(event)[1];
+  var y0 = y.invert(mouseY);
 
-  var i = bisect(allDates, x0, 1);
+  // Find the corresponding data points for the y-coordinate
   var selectedData = data.map(function (d) {
-    var index = d3.bisectLeft(
-      d.data.map(function (datum) {
-        return datum.date;
-      }),
-      x0
-    );
-
-    if (index >= d.data.length) {
-      index = d.data.length - 1;
-    }
-
+    var index = bisect(d.data, y0, 1);
     var dataPoint = d.data[index];
     return {
       date: dataPoint.date,
@@ -427,55 +430,61 @@ function mousemove(event) {
     };
   });
 
-  focus.attr("cx", x(selectedData[0].date)).attr("cy", y(selectedData[0].ratio));
+  // Find the data point closest to the mouse position
+  var closestData = selectedData.reduce(function (prev, curr) {
+    return Math.abs(y(curr.ratio) - mouseY) < Math.abs(y(prev.ratio) - mouseY) ? curr : prev;
+  });
 
-  // update focus box position based on mouse coordinates
+  // Update the position of the focus circle
+  focus.attr("cx", x(closestData.ratio)).attr("cy", y(closestData.date));
+  
+  // Update the position of the focus box
   var fbWidth = focusBox.node().getBBox().width;
   var fbHeight = focusBox.node().getBBox().height;
-  var fbX = x(selectedData[0].date) + 15;
-  var fbY = y(selectedData[0].ratio) + 10;
+  var fbX = x(closestData.ratio) + 10;
+  var fbY = y(closestData.date) - 40;
   focusBox.attr("x", fbX).attr("y", fbY);
 
-  // update focus text position
-  focusText.html(null) // clear content
-    .attr("x", fbX + fbWidth / 2) // center text horizontally 
-    .attr("y", fbY + fbHeight / 2); // adjust y pos of text
+
+  // Update the position and content of the focus text
+  focusText.attr("x", fbX + 10).attr("y", fbY + 25);
+
+
+  focusText.select("tspan.date").attr("x", fbX + 10).attr("y", fbY + 25).text("Date: " + d3.timeFormat("%m-%d-%Y")(closestData.date));
+  focusText.select("tspan.ratio").attr("x", fbX + 10).attr("y", fbY + 45).text("Ratio: " + closestData.ratio.toFixed(4));
+  
 
   focusText.append("tspan")
-    .text("Date: " + d3.timeFormat("%m-%d-%Y")(selectedData[0].date))
-    .attr("x", fbX + fbWidth / 2)
-    .attr("dy", "-0.5em")
-    .style("text-anchor", "middle");
+    .attr("class", "date")
+    .attr("x", fbX + 10)
+    .attr("y", fbY + 20);
 
   focusText.append("tspan")
-    .text("Ratio: " + selectedData[0].ratio.toFixed(4))
-    .attr("x", fbX + fbWidth / 2)
-    .attr("dy", "1em")
-    .style("text-anchor", "middle");
+    .attr("class", "ratio")
+    .attr("x", fbX + 10)
+    .attr("y", fbY + 40);
 
+  // Update the position of the horizontal line
+  horizontalLine.attr("x1", x(-2))
+    .attr("y1", y(closestData.date))
+    .attr("x2", x(2))
+    .attr("y2", y(closestData.date))
+    .style("opacity", 1);
 
-  // Add vertical line
-  var verticalLine = svg.selectAll(".vertical-line").data([selectedData[0].date]);
-
-  verticalLine.enter()
-    .append("line")
-    .attr("class", "vertical-line")
-    .attr("x1", x(selectedData[0].date))
-    .attr("y1", height)
-    .attr("x2", x(selectedData[0].date))
-    .attr("y2", 0)
-    .style("stroke", "black")
-    .style("stroke-dasharray", "4")
-    .style("opacity", 0.5);
-
-  verticalLine.attr("x1", x(selectedData[0].date)).attr("x2", x(selectedData[0].date));
-
-  verticalLine.exit().remove();
 }
 
+
+// When mouse leaves the chart area, hide the annotations
 function mouseout() {
   focus.style("opacity", 0);
   focusText.style("opacity", 0);
   focusBox.style("opacity", 0);
+  horizontalLine.style("opacity", 0); // Hide the horizontal line
 }
+
+// Attach the event handlers to the transparent rectangle
+svg.select("rect")
+  .on("mouseover", mouseover)
+  .on("mousemove", mousemove)
+  .on("mouseout", mouseout);
 })
