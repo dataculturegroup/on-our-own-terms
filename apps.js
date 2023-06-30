@@ -404,16 +404,6 @@ function generateAttentionVisualization(selectedTerm, selectedDate) {
         });
       });
 
-      selectedTermArray.forEach(function (word, index) {
-        weekWordCounts[word] = weekWordCounts[word] || [];
-        weekWordCounts[word].push({
-          date: startDateStr,
-          leftCount: leftCounts[index],
-          rightCount: rightCounts[index],
-          ratio: leftCounts[index].total / rightCounts[index].total
-        });
-      });
-
       console.log('Word counts queried successfully.');
 
       // write the JSON data to separate files for each word
@@ -481,7 +471,7 @@ function generateAttentionVisualization(selectedTerm, selectedDate) {
     link.click();
 
     // check local storage if file has been downloaded 
-  // localStorage.setItem(localStorageKey, true);
+    // localStorage.setItem(localStorageKey, true);
 
     console.log(`JSON file ${index} created and downloaded successfully.`);
   }
