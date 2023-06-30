@@ -72,7 +72,7 @@ async function queryWaybackAPI(leftLeaningDomains, rightLeaningDomains) {
   var today = new Date(); // current date
   // 2 mondays ago 
   var monday_one = new Date();
-  monday_one.setDate(today.getDate() - ((today.getDay() + 6) % 7 + 7) % 7 - 15); // 2 Mondays ago
+  monday_one.setDate(today.getDate() - ((today.getDay() + 6) % 7 + 7) % 7 - 14); // 2 Mondays ago
   // 1 monday ago 
   var monday_two = new Date(monday_one);
   monday_two.setDate(monday_two.getDate() + 7); // corresponding Saturday
@@ -84,8 +84,8 @@ async function queryWaybackAPI(leftLeaningDomains, rightLeaningDomains) {
   console.log(endDateStr)
 
   // getting previous week's data 
-  var leftWordsFile = `/data/${endDateStr.replace(/-/g, "")}-top-left.csv`;
-  var rightWordsFile = `/data/${endDateStr.replace(/-/g, "")}-top-right.csv`;
+  var leftWordsFile = `/data/${startDateStr.replace(/-/g, "")}-top-left.csv`;
+  var rightWordsFile = `/data/${startDateStr.replace(/-/g, "")}-top-right.csv`;
 
   console.log('Left words file:', leftWordsFile);
   console.log('Right words file:', rightWordsFile);
@@ -201,7 +201,7 @@ function writeJSONFile(jsonData, word, index, startDateStr) {
   link.click();
 
   // check local storage if file has been downloaded 
- // localStorage.setItem(localStorageKey, true);
+  localStorage.setItem(localStorageKey, true);
 
   console.log(`JSON file ${index} created and downloaded successfully.`);
 }
@@ -214,7 +214,7 @@ loadDomainNames();
 // d3 viz 
 
 // set dimensions and margins of the graph
-var margin = { top: 30, right: 140, bottom: 80, left: 120 },
+var margin = { top: 30, right: 140, bottom: 80, left: 90 },
   width = 800 - margin.left - margin.right,
   height = 400 - margin.top - margin.bottom;
 
@@ -248,68 +248,45 @@ d3.json("data/attention/desanti_2023-05-15.json").then(function (data) {
   // set the ranges, domains for x and y scales
   var x = d3.scaleLinear().range([0, width]).domain([-2, 2]);
   var y = d3.scaleTime().range([height, 0]).domain([d3.min(allDates), d3.max(allDates)]);
-  
-  // add y axis
-  svg.append("g")
-  .call(d3.axisLeft(y)
-  .ticks(8)
-  .tickFormat(d3.timeFormat("%m-%d-%Y")))
-  .selectAll("text")
-  .style("font-size", "16px");
 
-  // add y axis label
+  
+   // add y axis
+  svg.append("g").call(d3.axisLeft(y).ticks(8).tickFormat(d3.timeFormat("%m-%d-%Y")));
+
+
+   // add y axis label
   svg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0- margin.left )
     .attr("x", 0 - height / 2)
     .attr("dy", "1em")
     .style("text-anchor", "middle")
-    .style("font-size", "16px")
     .text("Date");
-  
-    // add x axis
+
+  // add x axis
   svg.append("g")
     .attr("class", "x axis")
-    .attr("transform", "translate(" + width / 2 + " ," + (height + margin.top + 20) + ")")
+    .attr("transform", "translate(0," + height + ")")
 
-    
   // add x-axis tick marks
   svg.append("g")
     .attr("class", "x-axis")
     .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
+    .call(d3.axisBottom(x).ticks(6).tickFormat(d3.format(".2f")))
     .selectAll("text")
     .style("text-anchor", "end")
     .attr("dx", "-.8em")
     .attr("dy", ".15em")
     .attr("transform", "rotate(-65)");
-  svg.select(".x-axis").selectAll(".tick").remove();
 
   // add x axis label
   svg.append("text")
     .attr("transform", "translate(" + width / 2 + " ," + (height + margin.top + 20) + ")")
     .style("text-anchor", "middle")
     .text("Ratio (left count/right count)");
-  
-  // add label for thirds 
-  var xLabelsNames = [
-    { label: "Left Leaning", x: width / 6 },
-    { label: "Middle", x: width / 2 },
-    { label: "Right Leaning", x: (5 * width) / 6 }
-  ];
-  
-  var xLabels = svg.append("g")
-    .attr("class", "x-labels")
-    .selectAll(".x-label")
-    .data(xLabelsNames)
-    .enter()
-    .append("text")
-    .attr("class", "x-label")
-    .attr("x", function(d) { return d.x; })
-    .attr("y", height + 20)
-    .style("text-anchor", "middle")
-    .text(function(d) { return d.label; });
-  
+
+
+
   // create a vertical line at x=0
   svg.append("line")
     .attr("class", "zero-line")
@@ -342,9 +319,9 @@ svg.append("linearGradient")
   .attr("y2", y(-3))
   .selectAll("stop")
   .data([
-    { offset: "0%", color: "blue" },
+    { offset: "0%", color: "red" },
     { offset: "50%", color: "purple" },
-    { offset: "100%", color: "red" },
+    { offset: "100%", color: "blue" },
   ])
   .enter()
   .append("stop")
