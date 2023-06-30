@@ -21,8 +21,8 @@ function populateDates() {
   while (currentWeek < currentDate) {
     // calc the date when the data for the current week will be generated
     var weekEnd = new Date(currentWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
-    // data generation 5 days after, ie friday 
-    var dataGenerationDate = new Date(weekEnd.getTime() + 5 * 24 * 60 * 60 * 1000);
+    // data generation 5 days after, ie sunday 
+    var dataGenerationDate = new Date(weekEnd.getTime() + 7 * 24 * 60 * 60 * 1000);
 
     // check if date of data generation has passed
     if (dataGenerationDate <= currentDate) {
