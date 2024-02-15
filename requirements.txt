@@ -1,5 +1,5 @@
 # necessary modules/packages/libraries for py file
-pandas==1.5.*
-mediacloud_metadata==0.9.*
-wayback_news_search==1.0.*
+pandas==2.2.*
+mediacloud_metadata==0.12.*
+wayback_news_search==1.2.*
 requests
