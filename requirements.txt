@@ -1,5 +1,4 @@
 # necessary modules/packages/libraries for py file
-pandas==2.2.*
-mediacloud_metadata==0.12.*
-wayback_news_search==1.2.*
-requests
+pandas==3.*
+mediacloud==4.*
+python-dotenv

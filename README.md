@@ -1,15 +1,20 @@
-# Word Cloud Visualizer 
+US Partisans Discourse in News Headlines
+========================================
 
-## Introduction 
-This project is a web based application that allows users to pick a week and displays comparative word cloud visuals of the left and right wings of the political spectrum. The goal of this project is to provide an easy-to-understand illustration of what types of topics and ideas may be trending in a particular week. This helps us gain a better understanding of of the political and social issues that are currentlybeing discussed and debated within different ideological groups across the broader online media ecosystem. 
+This project is a web based application that allows users to pick explore the evolution of terms used in
+headlines across partisan US media collections over time. The goal of this project is to provide an 
+easy-to-understand illustration of what types of topics and ideas may be driving discourse. This helps us gain
+a better understanding of of the political and social issues that are currently being discussed and 
+debated within different ideological groups across the broader online media ecosystem.
 
-## Technologies Used 
-- HTML, CSS, and Javascript for the frontend 
-- D3.js for data visualization 
-- Python for CSV creation, storing data
+## Developing
 
-## Getting Started 
-To use this applicaiton, navigate to the [project website](link here) and select a Sunday start date from the dropdown menu. The word cloud visuals for the selected week will be displayed automatically. 
+Data is pulled regularly from the Media Cloud API and stored in raw CSV files. Run `generate_data.py` to create the weekly data files. Then run `prepare_data.py` to generate word-by-word files with usage over time.
 
 ## License
 This project is licensed under the [MIT License](https://opensource.org/license/mit/).
+
+## Contributors
+
+- Rahul Bhargava
+- Clair Pan

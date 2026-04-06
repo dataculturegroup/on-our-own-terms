@@ -32,7 +32,6 @@ body {
 
 header {
     padding: var(--padding-large);
-    text-align: center;
     color: var(--color-inverse);
     background-color: var(--color-primary);
 }
@@ -61,12 +60,12 @@ footer a:visited {
 
 h1 {
     font-family: var(--font-family-header);
-    font-size: 4em;
+    font-size: 2.5em;
 }
 
 h2 {
     font-family: var(--font-family-header);
-    font-size: 2em;
+    font-size: 1.5em;
     opacity: 0.75;
 }
 

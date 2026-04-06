@@ -23,22 +23,169 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 
-    <!-- INCLUDE JS FILES -->     
-    <!-- use d3.js for easy DOM manipluation -->
+    <!-- d3.js -->
     <script type="text/javascript" src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="apps.js"></script>
 
     <link rel="stylesheet" href="./styles.css">
 
+    <style>
+      /* streamgraph section styles */
+      #stream-section {
+        background: #ffffff;
+        color: var(--color-text);
+        font-family: 'Source Sans Pro', sans-serif;
+        padding: 0px;
+      }
+      #stream-section .legend {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        font-size: 0.78rem;
+        color: #666;
+        margin-bottom: 12px;
+      }
+      #stream-section .legend .item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      #stream-section .legend .swatch {
+        width: 10px; height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      #stream-section svg text {
+        font-family: 'Source Sans Pro', sans-serif;
+      }
+      #stream-section .chart-container {
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      #stream-section .methodology {
+        max-width: 960px;
+        margin: 16px auto 0;
+        font-size: 0.75rem;
+        color: #888;
+        line-height: 1.6;
+        padding: 0 32px;
+      }
+      #stream-section .methodology span { color: var(--color-text); font-weight: 500; }
+      .stream-tooltip {
+        position: fixed;
+        pointer-events: none;
+        background: #ffffff;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 10px 14px;
+        font-size: 0.78rem;
+        color: var(--color-text);
+        line-height: 1.6;
+        opacity: 0;
+        transition: opacity 0.12s;
+        z-index: 1000;
+        max-width: 260px;
+        font-family: 'Source Sans Pro', sans-serif;
+      }
+      .stream-tooltip strong { color: var(--color-text); font-weight: 600; }
+      .stream-tooltip .val { font-variant-numeric: tabular-nums; }
+      .stream-tooltip .sw {
+        display: inline-block; width: 8px; height: 8px;
+        border-radius: 50%; margin-right: 4px; vertical-align: middle;
+      }
+      #term-picker {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .picker-label {
+        font-family: var(--font-family-body);
+        font-size: 1.2rem;
+        color: var(--color-text);
+      }
+      #suggested-terms {
+        font-size: 0.75rem;
+      }
+      .term-chip {
+        font-family: var(--font-family-header);
+        color: var(--color-primary);
+        background: transparent;
+        border: 2px solid var(--color-primary);
+        border-radius: 20px;
+        padding: 2px 10px;
+        cursor: pointer;
+        line-height: 1.4;
+        transition: background 0.15s, color 0.15s;
+        margin-left: 4px;
+      }
+      .term-chip:hover, .term-chip.active {
+        background: var(--color-primary);
+        color: #ffffff;
+      }
+      #inputTerm {
+        font-family: var(--font-family-body);
+        background: #ffffff;
+        color: var(--color-text);
+        border: 1px solid #ccc;
+        font-size: 1.2rem;
+        padding: 4px 10px;
+        margin: 0 !important;
+      }
+      #inputTerm option {
+        background: #ffffff;
+        color: var(--color-text);
+      }
+      #term-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--color-text);
+        text-align: center;
+        margin: 10px 0px;
+      }
+      #term-subtitle {
+        text-align: center;
+        font-size: 0.88rem;
+        color: #888;
+        margin-bottom: 18px;
+      }
+      #term-warning {
+        font-family: var(--font-family-body);
+        font-size: 0.9rem;
+        color: #8a3a00;
+        background: #fff3e0;
+        border: 1px solid #f0a070;
+        border-radius: 4px;
+        padding: 8px 14px;
+        margin-bottom: 12px;
+      }
+      .stream { cursor: pointer; }
+      .tooltip-click-hint {
+        font-size: 0.7rem;
+        color: var(--color-primary);
+        margin-top: 6px;
+        text-align: center;
+      }
+      #stream-loading {
+        text-align: center;
+        color: #888;
+        padding: 40px 0;
+        font-size: 1rem;
+      }
+    </style>
+
 </head>
 
-<body onload="populateDates()">
-  
+<body>
+
     <header>
       <div class="container">
         <div class="row">
-          <div class="col-lg-8 offset-lg-2">
+          <div class="col-lg-5">
             <h1>On Our Own Terms</h1>
+          </div>
+          <div class="col-lg-7">
             <h2>Explore a partisan breakdown of top words used in American online news headlines each week.</h2>
           </div>
         </div>
@@ -49,57 +196,75 @@
 
       <div class="container">
         <div class="row">
-          <div class="col-lg-6 offset-lg-3">
-            <p>
-              The US political and online news systems have been increasingly defined by their polarization. Since 2016, 
-              <a href="https://cyber.harvard.edu/publications/2017/08/mediacloud">media researchers</a> and 
-              <a href="https://www.usatoday.com/in-depth/news/investigations/2022/09/09/congress-twitter-language-used-democrats-republicans/10146954002/">journalists</a> 
-              have found strong evidence of this. This has led to <em>two sets of media that speak about completely differing things</em>.
-            </p>
-            <p>
-              This site lets you explore media polarization via the <em>top words</em> used in article headlines across two sets of 
-              American online news sources. These partisan sets are based on sharing patterns of Twitter users, and thus more of an 
-              assessment of what registered voters from each party are sharing rather than a direct assessment of the editorial
-              positions of the publication itself. The data is collected from an under-construction new archive of online news being
-              collaboratively built by the <a href="https://www.mediacloud.org/">Media Cloud</a> organization and the 
-              <a href="https://archive.org/about">Internet Archive's</a> <a href="https://web.archive.org/">Wayback Machine</a>.
-            </p>
+          <div class="col-lg-5">
+            <section>
+              <p>
+                The US political and online news systems have been increasingly defined by their polarization. Since 2016, 
+                <a href="https://cyber.harvard.edu/publications/2017/08/mediacloud">media researchers</a> and 
+                <a href="https://www.usatoday.com/in-depth/news/investigations/2022/09/09/congress-twitter-language-used-democrats-republicans/10146954002/">journalists</a> 
+                have found strong evidence of this. This has led to <em>two sets of media that speak about completely differing things</em>.
+              </p>
+              <p>
+                This site lets you explore media polarization via the <em>top words</em> used in article headlines across
+                five partisan quintiles of American online news sources. These partisan sets are based on sharing patterns of
+                Twitter users, and thus more of an assessment of what registered voters from each party are sharing rather
+                than a direct assessment of the editorial positions of the publication itself. The data is collected from an
+                the <a href="https://www.mediacloud.org/">Media Cloud</a> online news archive.
+              </p>
+              <p>
+                Select a term see how its headline usage has varied over time across
+                far-left, center-left, center, center-right, and far-right media. Or try one of the suggested terms we've listed.
+                Rollover the streamgraph to see the exact percentage of headlines from each partisan collection that contained
+                that term in that week. Click the graph to jump to a Media Cloud query that lets you explore the details.
+              </p>
+            </section>
           </div>
-        </div>
+          <div class="col-lg-7">
+            <!-- Streamgraph section (dark background, full-width) -->
+            <section id="stream-section">
+              <div class="container">
+                <div class="row">
+                  <div class="col-lg-8 offset-lg-2">
+                    <div id="term-warning" hidden></div>
+                    <div id="term-picker">
+                      Pick a term: <select id="inputTerm">
+                        <option value="" selected>Loading terms…</option>
+                      </select>
+                    </div>
+                    <div id="suggested-terms">
+                      Or try
+                      <button class="term-chip" data-term="ice">ice</button>
+                      <button class="term-chip" data-term="women">women</button>
+                      <button class="term-chip" data-term="trump">trump</button>
+                      <button class="term-chip" data-term="gaza">gaza</button>
+                      <button class="term-chip" data-term="war">war</button>
+                      <button class="term-chip" data-term="football">football</button>
+                    </div>
+                    <div id="term-title"></div>
+                    <div id="term-subtitle"></div>
+                  </div>
+                </div>
+              </div>
 
-        <div class="row">
-          <div class="col-lg-6 offset-lg-3">
-            <form id="form">
-              <select name="select-date" id="inputDate" onchange="handleDateSelected(); showResultText(); return false;">
-                <option value="" selected>Select a date</option>
-              </select> 
-            </form>
-          </div>  
-        </div>
+              <div class="legend" id="legend"></div>
+              <div class="chart-container" id="chart">
+                <div id="stream-loading"></div>
+              </div>
 
-        <div class="row">
-          <div class="col-lg-6 offset-lg-3">
-            <div id="resultWeek"></div>
-          </div>
-        </div>  
-
-        <div class="row">
-          <div class="col-xl-4" id="left-only-terms" >
-          </div>
-          <div class="col-xl-4" id="shared-terms" >
-          </div>
-          <div class="col-xl-4" id="right-only-terms" >
-          </div>
-        </div>
-
-        <div id="viz-wrapper" margin="'0 auto">
+              <div class="methodology">
+                <span>Methodology:</span> Each stream's horizontal width maps to the
+                fraction of sampled articles containing the term in their headline, for that
+                partisan quintile in a given week. Streams are stacked left-to-right from far-left
+                to far-right and centered. Data: MediaCloud weekly samples
+                (n&nbsp;=&nbsp;5,000 per quintile).
+              </div>
+            </section>
           </div>
         </div>
       </div>
-      
-      <canvas id="font-helper-canvas" style="display:none; padding-left:20px"></canvas>
-
     </main>
+
+    <div class="stream-tooltip" id="tooltip"></div>
 
     <footer>
       <div class="row">
@@ -107,9 +272,7 @@
           <p>
             <a href="https://github.com/dataculturegroup/us-politics-weekly-terms" target="_blank" rel="noopener noreferrer">View our source code and data on GitHub</a>
             <br />
-            © 2023 Copyright - Claire Pan and Rahul Bhargava.
-            <br />
-            A project of the Northeasern University <a href="https://dataculture.northeastern.edu">Data Culture Group</a>.
+            A project of the Northeastern University <a href="https://dataculture.northeastern.edu">Data Culture Group</a>.
             <br />
             <a href="https://dataculture.northeastern.edu"><img width="80" src="img/dcg-logo.png" alt="Data Culture Group logo" /></a>
             <a href="https://mediacloud.org"><img width="80" src="img/mediacloud-logo-black.png" alt="Media Cloud logo" /></a>  
@@ -126,8 +289,335 @@
     integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
     </script>
 
-  </div>
+    <script>
+    /* ─── constants ─── */
+    const COLLECTIONS = ["far-left", "center-left", "center", "center-right", "far-right"];
+    const COL_COLORS = {
+      "far-left":     "#4a90d9",
+      "center-left":  "#7b6fbf",
+      "center":       "#9b59b6",
+      "center-right": "#c04878",
+      "far-right":    "#e04040"
+    };
+
+    const tooltip = d3.select("#tooltip");
+
+    /* ─── build legend (once) ─── */
+    const legendEl = document.getElementById("legend");
+    COLLECTIONS.forEach(c => {
+      const item = document.createElement("div");
+      item.className = "item";
+      item.innerHTML = `<div class="swatch" style="background:${COL_COLORS[c]}"></div>${c}`;
+      legendEl.appendChild(item);
+    });
+
+    /* ─── on page load: fetch top-terms.csv, populate dropdown, render first term ─── */
+    d3.csv("./data-terms/top-terms.csv").then(rows => {
+      const select = document.getElementById("inputTerm");
+      select.innerHTML = "";
+
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "Select a term…";
+      placeholder.disabled = true;
+      select.appendChild(placeholder);
+
+      rows.slice().sort((a, b) => a.term.localeCompare(b.term)).forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r.filename;
+        opt.textContent = r.term;
+        opt.dataset.term = r.term;
+        select.appendChild(opt);
+      });
+
+      // pick initial term: URL param > random suggested chip > first option
+      const urlTerm = new URLSearchParams(window.location.search).get("term")?.trim().toLowerCase();
+      const allOptions = Array.from(select.options).filter(o => o.value);
+      let initialOpt = null;
+
+      if (urlTerm) {
+        initialOpt = allOptions.find(o => o.dataset.term?.trim().toLowerCase() === urlTerm) || null;
+        if (!initialOpt) {
+          showWarning(urlTerm);
+        }
+      }
+      if (!initialOpt) {
+        const chips = Array.from(document.querySelectorAll("#suggested-terms .term-chip"));
+        const randomChip = chips[Math.floor(Math.random() * chips.length)];
+        initialOpt = allOptions.find(o => o.dataset.term === randomChip.dataset.term) || allOptions[0];
+      }
+
+      select.value = initialOpt.value;
+      setActiveChip(initialOpt.dataset.term);
+      // seed the initial history entry so back-navigation from the first term works
+      const initTerm = initialOpt.dataset.term;
+      const initURL = new URL(window.location);
+      initURL.searchParams.set("term", initTerm);
+      window.history.replaceState({ term: initTerm }, "", initURL);
+      loadTerm();
+    });
+
+    document.getElementById("inputTerm").addEventListener("change", () => {
+      const select = document.getElementById("inputTerm");
+      const term = select.options[select.selectedIndex].dataset.term;
+      hideWarning();
+      setActiveChip(null);
+      pushTermToURL(term);
+      loadTerm();
+    });
+
+    document.querySelectorAll(".term-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const termName = chip.dataset.term;
+        const select = document.getElementById("inputTerm");
+        const opt = Array.from(select.options).find(o => o.dataset.term === termName);
+        if (opt) {
+          hideWarning();
+          select.value = opt.value;
+          setActiveChip(termName);
+          pushTermToURL(termName);
+          loadTerm();
+        }
+      });
+    });
+
+    function showWarning(term) {
+      const el = document.getElementById("term-warning");
+      el.textContent = `Sorry, "${term}" isn't in our database.`;
+      el.hidden = false;
+    }
+
+    function hideWarning() {
+      document.getElementById("term-warning").hidden = true;
+    }
+
+    function setActiveChip(termName) {
+      document.querySelectorAll(".term-chip").forEach(c => {
+        c.classList.toggle("active", c.dataset.term === termName);
+      });
+    }
+
+    function pushTermToURL(termName) {
+      const normalized = termName.trim().toLowerCase();
+      const url = new URL(window.location);
+      url.searchParams.set("term", normalized);
+      window.history.pushState({ term: normalized }, "", url);
+    }
+
+    window.addEventListener("popstate", event => {
+      const termName = event.state?.term
+        ?? new URLSearchParams(window.location.search).get("term");
+      if (!termName) return;
+      const select = document.getElementById("inputTerm");
+      const opt = Array.from(select.options).find(o => o.dataset.term === termName);
+      if (opt) {
+        select.value = opt.value;
+        setActiveChip(termName);
+        loadTerm();
+      }
+    });
+
+    /* ─── load a term CSV and render ─── */
+    function loadTerm() {
+      const select = document.getElementById("inputTerm");
+      const filename = select.value;
+      if (!filename) return;
+
+      const term = select.options[select.selectedIndex].dataset.term;
+
+      document.getElementById("term-title").textContent = `"${term}"`;
+      document.getElementById("term-subtitle").textContent =
+        "Weekly headline frequency across five partisan media collections.";
+
+      document.getElementById("chart").innerHTML =
+        '<div id="stream-loading">Loading data…</div>';
+
+      d3.csv(`./data-terms/${filename}`, d3.autoType).then(rows => {
+        renderStreamgraph(rows, term);
+      }).catch(err => {
+        document.getElementById("chart").innerHTML =
+          `<div id="stream-loading">Error loading data for "${term}".</div>`;
+        console.error(err);
+      });
+    }
+
+    /* ─── render streamgraph ─── */
+    function renderStreamgraph(rows, term) {
+      const chartEl = document.getElementById("chart");
+      chartEl.innerHTML = "";
+
+      const byWeek = d3.group(rows, d => d.date);
+      let weeklyData = [];
+
+      for (const [dateNum, entries] of byWeek) {
+        const ds = String(dateNum);
+        const yr = ds.slice(0, 4), mo = ds.slice(4, 6), dy = ds.slice(6, 8);
+        const week = { date: new Date(`${yr}-${mo}-${dy}`), dateStr: ds };
+        for (const e of entries) {
+          week[e.collection] = +e.doc_ratio;
+        }
+        for (const c of COLLECTIONS) {
+          if (!(c in week)) week[c] = 0;
+        }
+        weeklyData.push(week);
+      }
+
+      weeklyData.sort((a, b) => a.date - b.date);
+
+      const stack = d3.stack()
+        .keys(COLLECTIONS)
+        .offset(d3.stackOffsetSilhouette)
+        .order(d3.stackOrderNone);
+      const series = stack(weeklyData);
+
+      const margin = { top: 40, right: 100, bottom: 40, left: 100 };
+      const chartWidth = 960;
+      const rowStep = 14;
+      const innerH = weeklyData.length * rowStep;
+      const innerW = chartWidth - margin.left - margin.right;
+      const totalH = innerH + margin.top + margin.bottom;
+
+      const svg = d3.select("#chart")
+        .append("svg")
+        .attr("viewBox", `0 0 ${chartWidth} ${totalH}`)
+        .attr("width", "100%");
+
+      const g = svg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const yScale = d3.scaleLinear()
+        .domain([0, weeklyData.length - 1])
+        .range([innerH, 0]);
+
+      const xPad = 0.7;
+      const xScale = d3.scaleLinear()
+        .domain([-xPad, xPad])
+        .range([0, innerW]);
+
+      const areaGen = d3.area()
+        .y((d, i) => yScale(i))
+        .x0(d => xScale(d[0]))
+        .x1(d => xScale(d[1]))
+        .curve(d3.curveCatmullRom.alpha(0.5));
+
+      series.forEach((s, si) => {
+        const key = COLLECTIONS[si];
+        g.append("path")
+          .datum(s)
+          .attr("d", areaGen)
+          .attr("fill", COL_COLORS[key])
+          .attr("opacity", 0.82)
+          .attr("class", "stream")
+          .attr("data-key", key)
+          .on("mouseenter", function() {
+            g.selectAll(".stream").attr("opacity", 0.2);
+            d3.select(this).attr("opacity", 0.95);
+          })
+          .on("mouseleave", function() {
+            g.selectAll(".stream").attr("opacity", 0.82);
+            tooltip.style("opacity", 0);
+          })
+          .on("mousemove", function(event) {
+            const [, my] = d3.pointer(event, g.node());
+            const idx = Math.round(yScale.invert(my));
+            const clamped = Math.max(0, Math.min(weeklyData.length - 1, idx));
+            const w = weeklyData[clamped];
+
+            const rowsHtml = COLLECTIONS.map(c => {
+              const rv = w[c] || 0;
+              const hl = c === key ? "font-weight:600;" : "";
+              return `<span class="sw" style="background:${COL_COLORS[c]}"></span>` +
+                `<span style="${hl}">${c}: <span class="val">${(rv * 100).toFixed(2)}%</span></span>`;
+            }).join("<br>");
+
+            const fmt = d3.timeFormat("%b %d, %Y");
+            tooltip.html(`
+              <strong>${fmt(w.date)}</strong><br>
+              <hr style="border:none;border-top:1px solid #333;margin:4px 0 6px">
+              ${rowsHtml}
+              <div class="tooltip-click-hint">Click to explore in Media Cloud</div>
+            `);
+            tooltip.style("opacity", 1)
+              .style("left", (event.clientX + 16) + "px")
+              .style("top", (event.clientY - 10) + "px");
+          })
+          .on("click", function(event) {
+            const [, my] = d3.pointer(event, g.node());
+            const idx = Math.round(yScale.invert(my));
+            const clamped = Math.max(0, Math.min(weeklyData.length - 1, idx));
+            const w = weeklyData[clamped];
+            window.open(buildMediaCloudURL(term, w.date), "_blank");
+          });
+      });
+
+      // center axis line
+      g.append("line")
+        .attr("x1", xScale(0)).attr("x2", xScale(0))
+        .attr("y1", 0).attr("y2", innerH)
+        .attr("stroke", "#343838")
+        .attr("stroke-opacity", 0.15)
+        .attr("stroke-width", 1)
+        .attr("stroke-dasharray", "3,5");
+
+      // date labels every 4th week + last
+      const fmt = d3.timeFormat("%b %d, '%y");
+      weeklyData.forEach((w, i) => {
+        if (i % 4 === 0 || i === weeklyData.length - 1) {
+          g.append("text")
+            .attr("x", innerW + 10)
+            .attr("y", yScale(i))
+            .attr("dy", "0.35em")
+            .attr("fill", "#999")
+            .attr("font-size", "0.6rem")
+            .text(fmt(w.date));
+        }
+      });
+
+      // NEWEST / OLDEST labels
+      g.append("text")
+        .attr("x", -10).attr("y", yScale(weeklyData.length - 1))
+        .attr("dy", "0.35em").attr("text-anchor", "end")
+        .attr("fill", "#5a5750").attr("font-size", "0.58rem")
+        .attr("font-weight", 500).attr("letter-spacing", "0.05em")
+        .text("NEWEST");
+
+      g.append("text")
+        .attr("x", -10).attr("y", yScale(0))
+        .attr("dy", "0.35em").attr("text-anchor", "end")
+        .attr("fill", "#5a5750").attr("font-size", "0.58rem")
+        .attr("font-weight", 500).attr("letter-spacing", "0.05em")
+        .text("OLDEST");
+    }
+
+    function buildMediaCloudURL(term, weekDate) {
+      const fmtDate = d => {
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        const yyyy = d.getFullYear();
+        return `${mm}-${dd}-${yyyy}`;
+      };
+      const endDate = new Date(weekDate);
+      endDate.setDate(endDate.getDate() + 6);
+      const start = fmtDate(weekDate);
+      const end = fmtDate(endDate);
+      const enc = v => encodeURIComponent(v);
+      const r5 = v => Array(5).fill(enc(v)).join('%2C');
+      return 'https://search.mediacloud.org/search?' + [
+        `q=${r5(term)}`,
+        `nq=%2C%2C%2C%2C`,
+        `start=${r5(start)}`,
+        `end=${r5(end)}`,
+        `p=${r5('onlinenews-mediacloud')}`,
+        `ss=%2C%2C%2C%2C`,
+        `cs=231013063%2C231013089%2C231013108%2C231013109%2C231013110`,
+        `any=${r5('any')}`,
+        `name=left%2Ccenter%20left%2Ccenter%2Ccenter%20right%2Cright`,
+        `edit=${r5('true')}`,
+      ].join('&');
+    }
+    </script>
 
 </body>
 
 </html>
+
