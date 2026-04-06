@@ -160,6 +160,13 @@
         padding: 8px 14px;
         margin-bottom: 12px;
       }
+      #stream-sticky {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: #ffffff;
+        padding: 8px 0 4px;
+      }
       .stream { cursor: pointer; }
       .tooltip-click-hint {
         font-size: 0.7rem;
@@ -240,13 +247,16 @@
                       <button class="term-chip" data-term="war">war</button>
                       <button class="term-chip" data-term="football">football</button>
                     </div>
-                    <div id="term-title"></div>
-                    <div id="term-subtitle"></div>
                   </div>
                 </div>
               </div>
 
-              <div class="legend" id="legend"></div>
+              <div id="stream-sticky">
+                <div id="term-title"></div>
+                <div id="term-subtitle"></div>
+                <div class="legend" id="legend"></div>
+              </div>
+
               <div class="chart-container" id="chart">
                 <div id="stream-loading"></div>
               </div>
