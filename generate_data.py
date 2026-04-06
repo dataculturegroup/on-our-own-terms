@@ -8,6 +8,10 @@ from dotenv import load_dotenv
 
 load_dotenv()  # reads variables from a .env file and sets them in os.environ
 
+MC_API_KEY = os.getenv('MC_API_KEY')
+if not MC_API_KEY:
+    raise EnvironmentError("MC_API_KEY environment variable is not set")
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logger.info("Starting generation")
