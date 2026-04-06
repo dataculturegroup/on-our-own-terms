@@ -25,11 +25,14 @@ jobs:
       - name: Check for CSV files and generate if necessary
         run: python check_csv.py
           
-      - name: execute py script 
+      - name: execute py script
         run: python generate_data.py
-        
+
+      - name: prepare data
+        run: python prepare_data.py
+
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9
         with:
-          message: 'Generated CSV files' # commit message
-          add: 'data/*' # path to CSV files
+          message: 'Generated CSV files'
+          add: '["data/*", "data-terms/*"]'
