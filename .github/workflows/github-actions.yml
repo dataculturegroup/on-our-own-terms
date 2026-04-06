@@ -1,4 +1,4 @@
-name: Generate Python Script on CRON Schedule
+name: Generate data
 
 on:
 # push code to main branch 
