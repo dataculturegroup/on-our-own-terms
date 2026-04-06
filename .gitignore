@@ -1,1 +1,4 @@
 data/2018-quintiles/*.txt
+.idea
+.DS_Store
+.env
