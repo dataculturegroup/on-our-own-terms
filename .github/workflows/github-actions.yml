@@ -22,13 +22,10 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           
-      - name: Check for CSV files and generate if necessary
-        run: python check_csv.py
-          
-      - name: execute py script
+      - name: generate data from MC
         run: python generate_data.py
 
-      - name: prepare data
+      - name: prepare data for website
         run: python prepare_data.py
 
       - name: Commit and push changes
