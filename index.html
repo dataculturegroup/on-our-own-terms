@@ -417,6 +417,9 @@
       }
     });
 
+    /* ─── persistent streamgraph state ─── */
+    let _streamState = null; // set after first render, reused for transitions
+
     /* ─── load a term CSV and render ─── */
     function loadTerm() {
       const select = document.getElementById("inputTerm");
@@ -429,14 +432,18 @@
       document.getElementById("term-subtitle").textContent =
         "Weekly headline frequency across five partisan media collections.";
 
-      document.getElementById("chart").innerHTML =
-        '<div id="stream-loading">Loading data…</div>';
+      // Only show the loading placeholder before the very first render
+      if (!_streamState) {
+        document.getElementById("chart").innerHTML =
+          '<div id="stream-loading">Loading data…</div>';
+      }
 
       d3.csv(`./data-terms/${filename}`, d3.autoType).then(rows => {
         renderStreamgraph(rows, term);
       }).catch(err => {
         document.getElementById("chart").innerHTML =
           `<div id="stream-loading">Error loading data for "${term}".</div>`;
+        _streamState = null;
         console.error(err);
       });
     }
@@ -444,7 +451,6 @@
     /* ─── render streamgraph ─── */
     function renderStreamgraph(rows, term) {
       const chartEl = document.getElementById("chart");
-      chartEl.innerHTML = "";
 
       const byWeek = d3.group(rows, d => d.date);
       let weeklyData = [];
@@ -477,14 +483,6 @@
       const innerW = chartWidth - margin.left - margin.right;
       const totalH = innerH + margin.top + margin.bottom;
 
-      const svg = d3.select("#chart")
-        .append("svg")
-        .attr("viewBox", `0 0 ${chartWidth} ${totalH}`)
-        .attr("width", "100%");
-
-      const g = svg.append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
-
       const yScale = d3.scaleLinear()
         .domain([0, weeklyData.length - 1])
         .range([innerH, 0]);
@@ -499,6 +497,34 @@
         .x0(d => xScale(d[0]))
         .x1(d => xScale(d[1]))
         .curve(d3.curveCatmullRom.alpha(0.5));
+
+      // ── If chart already exists and week count matches, transition in place ──
+      if (_streamState && _streamState.weekCount === weeklyData.length) {
+        COLLECTIONS.forEach((key, si) => {
+          _streamState.g.select(`.stream[data-key="${key}"]`)
+            .datum(series[si])
+            .transition()
+            .duration(600)
+            .ease(d3.easeCubicInOut)
+            .attr("d", areaGen);
+        });
+        // Store updated weeklyData reference for tooltip/click handlers
+        _streamState.weeklyData = weeklyData;
+        _streamState.areaGen = areaGen;
+        _streamState.yScale = yScale;
+        return;
+      }
+
+      // ── First render (or week count changed): build from scratch ──
+      chartEl.innerHTML = "";
+
+      const svg = d3.select("#chart")
+        .append("svg")
+        .attr("viewBox", `0 0 ${chartWidth} ${totalH}`)
+        .attr("width", "100%");
+
+      const g = svg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
 
       series.forEach((s, si) => {
         const key = COLLECTIONS[si];
@@ -518,10 +544,11 @@
             tooltip.style("opacity", 0);
           })
           .on("mousemove", function(event) {
+            const st = _streamState;
             const [, my] = d3.pointer(event, g.node());
-            const idx = Math.round(yScale.invert(my));
-            const clamped = Math.max(0, Math.min(weeklyData.length - 1, idx));
-            const w = weeklyData[clamped];
+            const idx = Math.round(st.yScale.invert(my));
+            const clamped = Math.max(0, Math.min(st.weeklyData.length - 1, idx));
+            const w = st.weeklyData[clamped];
 
             const rowsHtml = COLLECTIONS.map(c => {
               const rv = w[c] || 0;
@@ -542,11 +569,13 @@
               .style("top", (event.clientY - 10) + "px");
           })
           .on("click", function(event) {
+            const st = _streamState;
+            const termTitle = document.getElementById("term-title").textContent.replace(/"/g, "");
             const [, my] = d3.pointer(event, g.node());
-            const idx = Math.round(yScale.invert(my));
-            const clamped = Math.max(0, Math.min(weeklyData.length - 1, idx));
-            const w = weeklyData[clamped];
-            window.open(buildMediaCloudURL(term, w.date), "_blank");
+            const idx = Math.round(st.yScale.invert(my));
+            const clamped = Math.max(0, Math.min(st.weeklyData.length - 1, idx));
+            const w = st.weeklyData[clamped];
+            window.open(buildMediaCloudURL(termTitle, w.date), "_blank");
           });
       });
 
@@ -587,6 +616,8 @@
         .attr("fill", "#5a5750").attr("font-size", "0.58rem")
         .attr("font-weight", 500).attr("letter-spacing", "0.05em")
         .text("OLDEST");
+
+      _streamState = { g, yScale, xScale, areaGen, weeklyData, weekCount: weeklyData.length };
     }
 
     function buildMediaCloudURL(term, weekDate) {
