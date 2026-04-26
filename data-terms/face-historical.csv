@@ -779,7 +779,7 @@ date,collection,term_count,term_ratio,doc_count,doc_ratio,sample_size
 20251222,center,0,0,0,0,0
 20251222,center-right,0,0,0,0,0
 20251222,far-right,0,0,0,0,0
-20251229,far-left,0,0,0,0,0
+20251229,far-left,45,0.00928,45,0.00928,4850
 20251229,center-left,0,0,0,0,0
 20251229,center,0,0,0,0,0
 20251229,center-right,0,0,0,0,0
@@ -854,3 +854,8 @@ date,collection,term_count,term_ratio,doc_count,doc_ratio,sample_size
 20260406,center,0,0,0,0,0
 20260406,center-right,39,0.0078,36,0.0072,5000
 20260406,far-right,40,0.008,38,0.0076,5000
+20260413,far-left,34,0.0068,34,0.0068,5000
+20260413,center-left,0,0,0,0,0
+20260413,center,0,0,0,0,0
+20260413,center-right,0,0,0,0,0
+20260413,far-right,43,0.0086,42,0.0084,5000

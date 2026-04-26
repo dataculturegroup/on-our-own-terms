@@ -854,3 +854,8 @@ date,collection,term_count,term_ratio,doc_count,doc_ratio,sample_size
 20260406,center,0,0,0,0,0
 20260406,center-right,0,0,0,0,0
 20260406,far-right,40,0.008,40,0.008,5000
+20260413,far-left,0,0,0,0,0
+20260413,center-left,0,0,0,0,0
+20260413,center,0,0,0,0,0
+20260413,center-right,0,0,0,0,0
+20260413,far-right,41,0.0082,41,0.0082,5000
