@@ -874,3 +874,8 @@ date,collection,term_count,term_ratio,doc_count,doc_ratio,sample_size
 20260427,center,89,0.0178,88,0.0176,5000
 20260427,center-right,70,0.014,70,0.014,5000
 20260427,far-right,0,0,0,0,0
+20260504,far-left,0,0,0,0,0
+20260504,center-left,0,0,0,0,0
+20260504,center,46,0.046,46,0.046,1000
+20260504,center-right,30,0.03,30,0.03,1000
+20260504,far-right,0,0,0,0,0
