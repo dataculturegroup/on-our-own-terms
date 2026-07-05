@@ -919,3 +919,8 @@ date,collection,term_count,term_ratio,doc_count,doc_ratio,sample_size
 20260615,center,0,0,0,0,0
 20260615,center-right,0,0,0,0,0
 20260615,far-right,0,0,0,0,0
+20260622,far-left,8,0.008,7,0.007,1000
+20260622,center-left,0,0,0,0,0
+20260622,center,0,0,0,0,0
+20260622,center-right,0,0,0,0,0
+20260622,far-right,0,0,0,0,0
