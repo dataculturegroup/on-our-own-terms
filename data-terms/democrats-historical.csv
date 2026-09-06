@@ -1,4 +1,9 @@
 date,collection,term_count,term_ratio,doc_count,doc_ratio,sample_size
+20221205,far-left,0,0,0,0,0
+20221205,center-left,0,0,0,0,0
+20221205,center,0,0,0,0,0
+20221205,center-right,0,0,0,0,0
+20221205,far-right,0,0,0,0,0
 20221212,far-left,0,0,0,0,0
 20221212,center-left,0,0,0,0,0
 20221212,center,0,0,0,0,0
@@ -964,3 +969,8 @@ date,collection,term_count,term_ratio,doc_count,doc_ratio,sample_size
 20260817,center,0,0,0,0,0
 20260817,center-right,0,0,0,0,0
 20260817,far-right,20,0.02,20,0.02,1000
+20260824,far-left,0,0,0,0,0
+20260824,center-left,0,0,0,0,0
+20260824,center,0,0,0,0,0
+20260824,center-right,0,0,0,0,0
+20260824,far-right,16,0.016,16,0.016,1000
