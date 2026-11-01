@@ -1009,3 +1009,8 @@ date,collection,term_count,term_ratio,doc_count,doc_ratio,sample_size
 20261012,center,21,0.021,21,0.021,1000
 20261012,center-right,0,0,0,0,0
 20261012,far-right,0,0,0,0,0
+20261019,far-left,33,0.0066,33,0.0066,5000
+20261019,center-left,40,0.008,38,0.0076,5000
+20261019,center,50,0.01,50,0.01,5000
+20261019,center-right,55,0.011,55,0.011,5000
+20261019,far-right,0,0,0,0,0
