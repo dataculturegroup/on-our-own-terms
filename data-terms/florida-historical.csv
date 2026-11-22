@@ -1024,3 +1024,8 @@ date,collection,term_count,term_ratio,doc_count,doc_ratio,sample_size
 20261102,center,89,0.0178,88,0.0176,5000
 20261102,center-right,160,0.032,159,0.0318,5000
 20261102,far-right,104,0.0208,104,0.0208,5000
+20261109,far-left,0,0,0,0,0
+20261109,center-left,0,0,0,0,0
+20261109,center,58,0.0116,55,0.011,5000
+20261109,center-right,84,0.0168,83,0.0166,5000
+20261109,far-right,0,0,0,0,0
